@@ -12,14 +12,25 @@ import (
 	cometclient "github.com/cometbft/cometbft/rpc/client"
 	ics23 "github.com/confio/ics23/go"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	"github.com/ethereum/go-ethereum/crypto"
 )
+
+func hashQdata(queryData string) ([]byte, error) {
+	// Decode the hex-encoded input string
+	qbytes, err := hex.DecodeString(queryData)
+	if err != nil {
+		return nil, err
+	}
+
+	return crypto.Keccak256(qbytes), nil
+}
 
 func (s bridgeServer) MultistoreTree(ctx context.Context, req *QueryMultistoreRequest) (*QueryMultistoreResponse, error) {
 	var h *int64
 	if req.Height != 0 {
 		h = &req.Height
 	}
-	qid, err := hex.DecodeString(req.Qid)
+	qid, err := hashQdata(req.Qid)
 	if err != nil {
 		return nil, err
 	}
