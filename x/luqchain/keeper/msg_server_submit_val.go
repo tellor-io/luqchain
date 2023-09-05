@@ -37,6 +37,9 @@ func (k msgServer) SubmitVal(goCtx context.Context, msg *types.MsgSubmitVal) (*t
 		return nil, err
 	}
 	k.Logger(ctx).Error("submit report", "report", bytes.HexBytes(qid).String())
+	// log err of the timestamp no matter what
+	k.Logger(ctx).Error(fmt.Sprintf("report timestamp %d", report.Timestamp))
+	k.Logger(ctx).Error(fmt.Sprintf("current height %d", ctx.BlockHeight()))
 	tbytes := Uint64ToBytes(report.Timestamp)
 	store.Set(append(qid, tbytes...), addedReport)
 	return &types.MsgSubmitValResponse{}, nil

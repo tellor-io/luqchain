@@ -12,6 +12,7 @@ import (
 	cometclient "github.com/cometbft/cometbft/rpc/client"
 	ics23 "github.com/confio/ics23/go"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
@@ -82,14 +83,20 @@ func (s bridgeServer) MultistoreTree(ctx context.Context, req *QueryMultistoreRe
 			}
 			appHash, err := multistoreProof.Calculate()
 			fmt.Println("appHash", bytes.HexBytes(appHash))
+			if err != nil {
+				fmt.Println("err", err)
+			}
 
 		default:
 			fmt.Println("Defaulting to nothing found")
 			return nil, nil
 		}
 	}
+	logCtx := sdk.UnwrapSDKContext(ctx)
+	s.Logger(logCtx).Error(fmt.Sprintf("iavlProof %v", iavlProof))
 	paths := GetMerklePaths(iavlProof)
 	evmdata := make([]IAVLMerklePathEvm, len(paths))
+	s.Logger(logCtx).Error(fmt.Sprintf("paths %v", paths)) // todo: fix or rmv
 	for i, p := range paths {
 		evmdata[i].IsDataOnRight = p.IsDataOnRight
 		evmdata[i].SubtreeHeight = p.SubtreeHeight
