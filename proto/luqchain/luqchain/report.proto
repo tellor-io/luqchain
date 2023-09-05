@@ -1,0 +1,11 @@
+syntax = "proto3";
+package luqchain.luqchain;
+
+option go_package = "luqchain/x/luqchain/types";
+
+message Report {
+  
+  string qdata = 1; 
+  uint64 value = 2; 
+  uint64 timestamp = 3; 
+}

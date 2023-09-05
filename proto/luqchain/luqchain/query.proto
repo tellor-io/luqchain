@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package luqchain.luqchain;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "luqchain/luqchain/params.proto";
+import "luqchain/luqchain/report.proto";
+
+option go_package = "luqchain/x/luqchain/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  
+  // Parameters queries the parameters of the module.
+  rpc Params (QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/luqchain/luqchain/params";
+  
+  }
+  
+  // Queries a list of RetrieveVal items.
+  rpc RetrieveVal (QueryRetrieveValRequest) returns (QueryRetrieveValResponse) {
+    option (google.api.http).get = "/luqchain/luqchain/retrieve_val/{qid}/{timestamp}";
+  
+  }
+  
+  // Queries a list of RetrieveAll items.
+  rpc RetrieveAll (QueryRetrieveAllRequest) returns (QueryRetrieveAllResponse) {
+    option (google.api.http).get = "/luqchain/luqchain/retrieve_all";
+  
+  }
+}
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  
+  // params holds all the parameters of this module.
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryRetrieveValRequest {
+  string qid       = 1;
+  uint64 timestamp = 2;
+}
+
+message QueryRetrieveValResponse {
+  Report report = 1;
+}
+
+message QueryRetrieveAllRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryRetrieveAllResponse {
+  repeated Report                                 report     = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+

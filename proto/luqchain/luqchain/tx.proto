@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package luqchain.luqchain;
+
+option go_package = "luqchain/x/luqchain/types";
+
+// Msg defines the Msg service.
+service Msg {
+  rpc SubmitVal (MsgSubmitVal) returns (MsgSubmitValResponse);
+}
+message MsgSubmitVal {
+  string creator = 1;
+  string qdata   = 2;
+  uint64 value   = 3;
+}
+
+message MsgSubmitValResponse {}
+

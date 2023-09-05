@@ -1,0 +1,12 @@
+syntax = "proto3";
+package luqchain.luqchain;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "luqchain/x/luqchain/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  
+}

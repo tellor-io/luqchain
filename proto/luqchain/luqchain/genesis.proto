@@ -1,0 +1,12 @@
+syntax = "proto3";
+package luqchain.luqchain;
+
+import "gogoproto/gogo.proto";
+import "luqchain/luqchain/params.proto";
+
+option go_package = "luqchain/x/luqchain/types";
+
+// GenesisState defines the luqchain module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+}

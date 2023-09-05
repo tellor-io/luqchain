@@ -1,0 +1,48 @@
+version: '3'
+volumes:
+  genesis:
+  keyring:
+
+
+services:
+  validator-1:
+    image: luqchain-ignite
+    ports:
+      - "26660:26656"
+      - "26661:26657"
+      - "1310:1317"
+    volumes:
+      - genesis:/root/genesis/
+      - keyring:/root/keyring/
+    command:
+      - /bin/bash
+      - -c
+      - |
+        cp /root/.luqchain/config/genesis.json /root/genesis/
+        cp -r /root/.luqchain/keyring-test  /root/keyring/
+        luqchaind start
+
+  validator-2:
+    image: luqchain-ignite
+    depends_on:
+      - validator-1
+    ports:
+      - "26662:26656"
+      - "26663:26657"
+      - "1311:1317"
+    volumes:
+      - genesis:/root/genesis/
+      - keyring:/root/keyring/
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        rm -rf /root/.luqchain
+        luqchaind init validator
+        cp /root/genesis/genesis.json /root/.luqchain/config/genesis.json
+        cp -r /root/keyring/keyring-test /root/.luqchain/
+        luqchaind keys delete alice --keyring-backend test -y
+        sed -i 's/^persistent_peers = .*/persistent_peers = "61272fb1c0fb02504920848ef1cc6a502080fb16@validator-1:26656"/' /root/.luqchain/config/config.toml
+        luqchaind start & sleep 15
+        luqchaind tx staking create-validator --amount 50000000stake --pubkey $$(luqchaind tendermint show-validator) --from bob --commission-rate 0.10 --commission-max-rate 0.20 --commission-max-change-rate 0.01 --min-self-delegation 1  --keyring-backend test -y
+        wait
