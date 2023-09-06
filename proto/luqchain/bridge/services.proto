@@ -8,6 +8,7 @@ import "google/api/annotations.proto";
 import "luqchain/bridge/block_header_merkle.proto";
 import "luqchain/bridge/multistore.proto";
 import "luqchain/bridge/tmsig.proto";
+import "luqchain/bridge/inclusionproof.proto";
 option go_package = "luqchain/bridge";
 
 service Bridge {
@@ -58,8 +59,8 @@ message QueryInclusionProofRequest {
     uint64 timestamp = 3;
 }
 message QueryInclusionProofResponse {
-    MutiStoreTreeFields MutiStoreTree = 1 [(gogoproto.nullable) = false];
-    repeated IAVLMerklePathEvm iavl = 2 [(gogoproto.nullable) = false];
+    InclusionProofStuffFields InclusionProofStuff = 1 [(gogoproto.nullable) = false];
+    repeated IAVLMerklePathEvm MerklePath = 2 [(gogoproto.nullable) = false];
 }
 
 message QueryTmRequest {

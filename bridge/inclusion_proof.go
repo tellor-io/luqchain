@@ -84,6 +84,8 @@ func (s bridgeServer) InclusionProof(ctx context.Context, req *QueryInclusionPro
 	paths := GetMerklePaths(iavlProof)
 	evmdata := make([]IAVLMerklePathEvm, len(paths))
 	s.Logger(logCtx).Error(fmt.Sprintf("paths %v", paths)) // todo: fix or rmv
+	// log the iavl proof value
+	s.Logger(logCtx).Error(fmt.Sprintf("iavlProof.Value %v", iavlProof.Value))
 	for i, p := range paths {
 		evmdata[i].IsDataOnRight = p.IsDataOnRight
 		evmdata[i].SubtreeHeight = p.SubtreeHeight
@@ -93,14 +95,12 @@ func (s bridgeServer) InclusionProof(ctx context.Context, req *QueryInclusionPro
 	}
 
 	return &QueryInclusionProofResponse{
-		MutiStoreTree: MutiStoreTreeFields{
-			LuqchainIavlStateHash:            bytes.HexBytes(multistoreProof.Value).String(),
-			MintStoreMerkleHash:              bytes.HexBytes(multistoreProof.Path[0].Suffix).String(),
-			IcacontrollerToIcahostMerkleHash: bytes.HexBytes(multistoreProof.Path[1].Prefix[1:]).String(),
-			FeegrantToIbcMerkleHash:          bytes.HexBytes(multistoreProof.Path[2].Prefix[1:]).String(),
-			AccToEvidenceMerkleHash:          bytes.HexBytes(multistoreProof.Path[3].Prefix[1:]).String(),
-			ParamsToVestingMerkleHash:        bytes.HexBytes(multistoreProof.Path[4].Suffix).String(),
+		InclusionProofStuff: InclusionProofStuffFields{
+			RootHash: bytes.HexBytes(multistoreProof.Value).String(),
+			Version:  int64(req.Height),
+			Key:      bytes.HexBytes(iavlProof.Key).String(),
+			DataHash: bytes.HexBytes(iavlProof.Value).String(),
 		},
-		Iavl: evmdata,
+		MerklePath: evmdata,
 	}, nil
 }
