@@ -24,6 +24,10 @@ service Bridge {
     rpc TmSig (QueryTmRequest) returns (QueryTmResponse) {
         option (google.api.http).get = "/luqchain/bridge/tmsig";
     }
+    
+    rpc InclusionProof (QueryInclusionProofRequest) returns (QueryInclusionProofResponse) {
+        option (google.api.http).get = "/luqchain/bridge/inclusionproof";
+    }
 
 }
 
@@ -44,6 +48,16 @@ message QueryMultistoreRequest {
     uint64 timestamp = 3;
 }
 message QueryMultistoreResponse {
+    MutiStoreTreeFields MutiStoreTree = 1 [(gogoproto.nullable) = false];
+    repeated IAVLMerklePathEvm iavl = 2 [(gogoproto.nullable) = false];
+}
+
+message QueryInclusionProofRequest {
+    int64 height = 1;
+    string qid = 2;
+    uint64 timestamp = 3;
+}
+message QueryInclusionProofResponse {
     MutiStoreTreeFields MutiStoreTree = 1 [(gogoproto.nullable) = false];
     repeated IAVLMerklePathEvm iavl = 2 [(gogoproto.nullable) = false];
 }
