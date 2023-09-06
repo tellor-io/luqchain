@@ -147,4 +147,34 @@ contract BridgeTest is Test {
         });
         bridge.relayBlock(multistoreData, header, common, sigs);
     }
+
+    function testInclusionProof() public {
+        bytes32 rootHash = 0x75605B4972D8E1E729ED6404AE382E9A04AF62419C07F6B8684F97EF93C56B90;
+        uint256 version = 4629;
+        bytes memory key = hex"F03E9A3A8125B3030D3DA809A5065FB5F4FB91AE04B45C455218F4844614FC48";
+        bytes32 dataHash = 0x2A2F7B2BF7A9028DE05502F0A169A72E64A6F3CD3C26F62D8C2A93618928C4A1;
+        Bridge.IAVLData[] memory merklePaths = new Bridge.IAVLData[](3);
+        merklePaths[0] = Bridge.IAVLData({
+            isDataOnRight: true,
+            subtreeHeight: 1,
+            subtreeSize: 2,
+            subtreeVersion: 4629,
+            siblingHash: 0x289F5F11077B09013D392305B9DF9EF17C64BA4DED15F3F445A38E18F84F3F82
+        });
+        merklePaths[1] = Bridge.IAVLData({
+            isDataOnRight: true,
+            subtreeHeight: 2,
+            subtreeSize: 4,
+            subtreeVersion: 4629,
+            siblingHash: 0xF6F2BBAC53F49488FC9C3CD8D94707F7906201C1DC7F95D15F0D88F3DF48CB13
+        });
+        merklePaths[2] = Bridge.IAVLData({
+            isDataOnRight: true,
+            subtreeHeight: 3,
+            subtreeSize: 6,
+            subtreeVersion: 4629,
+            siblingHash: 0xE3C98274F4F977F312E2CFEB50186142B0ADBA198FFDD2D9EFC2B06A06103B14
+        });
+        assertEq(bridge.verifyProof(rootHash, version, key, dataHash, merklePaths), false); // todo: push correct block & validator sigs
+    }
 }

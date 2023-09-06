@@ -466,7 +466,7 @@ contract Bridge {
         bytes memory key,
         bytes32 dataHash,
         IAVLData[] memory merklePaths
-    ) private pure returns (bool) {
+    ) public pure returns (bool) {
         bytes memory encodedVersion = encodeVarintSigned(version);
 
         bytes32 currentMerkleHash = sha256(
