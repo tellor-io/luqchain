@@ -1,0 +1,8 @@
+syntax = "proto3";
+package luqchain.bridge;
+
+option go_package = "luqchain/bridge";
+message ValidatorInfo {
+	string ethAddress = 1;
+	int64 votingPower = 2;
+}

@@ -1,3 +1,4 @@
+/* tmsig.go
 package bridge
 
 import (
@@ -198,4 +199,28 @@ func GetSignaturesAndPrefix(info *cometbft.SignedHeader) ([]TmSig, CommonEncoded
 	}
 
 	return signatures, commonVote, nil
+}
+*/
+
+// this file contains the logic for getting
+// (given a block height) the block validators (eth addresses) and their voting powers
+
+package bridge
+
+import (
+	"context"
+)
+
+func (s bridgeServer) BlockValidatorInfo(_ context.Context, req *QueryBlockValidatorInfoRequest) (*QueryBlockValidatorInfoResponse, error) {
+	commit, err := s.getCommit(req.Height)
+	if err != nil {
+		panic(err)
+	}
+	sigs, _, err := GetSignaturesAndPrefix(&commit.SignedHeader)
+	if err != nil {
+		panic(err)
+	}
+	return &QueryBlockValidatorInfoResponse{
+		Validator: sigs, // todo: fix type
+	}, nil
 }

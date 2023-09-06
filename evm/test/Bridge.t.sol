@@ -149,6 +149,31 @@ contract BridgeTest is Test {
     }
 
     function testInclusionProof() public {
+        Bridge.ValidatorWithPower[]
+            memory vps = new Bridge.ValidatorWithPower[](2);
+        vps[0] = Bridge.ValidatorWithPower(
+            0x008c1B0e9CdD79Cf896a6e54cC60353BC104A313,
+            uint256(1000000)
+        );
+        vps[1] = Bridge.ValidatorWithPower(
+            0x2461D0b9B9808F56Af2E71B4aEcC90C60Ed9AB90,
+            uint256(500000)
+        );
+
+        Bridge bridge2 = new Bridge(
+            vps, // validators
+            hex"32086C7571636861696E" // encoded chain ID
+        );
+        assertEq(bridge2.encodedChainID(), hex"32086C7571636861696E");
+        assertEq(bridge2.getNumberOfValidators(), 2);
+        assertEq(
+            bridge2.getValidatorPower(
+                0x008c1B0e9CdD79Cf896a6e54cC60353BC104A313
+            ),
+            1000000
+        );
+        assertEq(bridge2.getAllValidatorPowers()[0].power, vps[0].power);
+
         bytes32 rootHash = 0x75605B4972D8E1E729ED6404AE382E9A04AF62419C07F6B8684F97EF93C56B90;
         uint256 version = 4629;
         bytes memory key = hex"F03E9A3A8125B3030D3DA809A5065FB5F4FB91AE04B45C455218F4844614FC48";
@@ -175,6 +200,6 @@ contract BridgeTest is Test {
             subtreeVersion: 4629,
             siblingHash: 0xE3C98274F4F977F312E2CFEB50186142B0ADBA198FFDD2D9EFC2B06A06103B14
         });
-        assertEq(bridge.verifyProof(rootHash, version, key, dataHash, merklePaths), false); // todo: push correct block & validator sigs
+        assertEq(bridge2.verifyProof(rootHash, version, key, dataHash, merklePaths), true);
     }
 }

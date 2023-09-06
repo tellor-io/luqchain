@@ -9,6 +9,7 @@ import "luqchain/bridge/block_header_merkle.proto";
 import "luqchain/bridge/multistore.proto";
 import "luqchain/bridge/tmsig.proto";
 import "luqchain/bridge/inclusionproof.proto";
+import "luqchain/bridge/blockvalidatorinfo.proto";
 option go_package = "luqchain/bridge";
 
 service Bridge {
@@ -28,6 +29,10 @@ service Bridge {
     
     rpc InclusionProof (QueryInclusionProofRequest) returns (QueryInclusionProofResponse) {
         option (google.api.http).get = "/luqchain/bridge/inclusionproof";
+    }
+
+    rpc BlockValidatorInfo (QueryBlockValidatorInfoRequest) returns (QueryBlockValidatorInfoResponse) {
+        option (google.api.http).get = "/luqchain/bridge/blockvalidators";
     }
 
 }
@@ -61,6 +66,14 @@ message QueryInclusionProofRequest {
 message QueryInclusionProofResponse {
     InclusionProofStuffFields InclusionProofStuff = 1 [(gogoproto.nullable) = false];
     repeated IAVLMerklePathEvm MerklePath = 2 [(gogoproto.nullable) = false];
+}
+
+message QueryBlockValidatorInfoRequest {
+    int64 height = 1;
+}
+
+message QueryBlockValidatorInfoResponse {
+    repeated ValidatorInfo Validator = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryTmRequest {
