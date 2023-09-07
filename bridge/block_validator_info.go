@@ -118,7 +118,7 @@ func getAddressesSignaturesAndPrefix(info *cometbft.SignedHeader) ([]string, []T
 	}
 
 	if len(addrs) == 0 {
-		return nil, nil, CommonEncodedVotePart{}, fmt.Errorf("No valid precommit")
+		return nil, nil, CommonEncodedVotePart{}, fmt.Errorf("no valid precommit")
 	}
 
 	signatures := make([]TmSig, len(addrs))
