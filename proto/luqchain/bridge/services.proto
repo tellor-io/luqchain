@@ -73,7 +73,7 @@ message QueryBlockValidatorInfoRequest {
 }
 
 message QueryBlockValidatorInfoResponse {
-    repeated ValidatorInfo Validator = 1 [(gogoproto.nullable) = false];
+    repeated ValidatorInfo Validators = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryTmRequest {

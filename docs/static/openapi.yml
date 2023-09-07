@@ -330,11 +330,13 @@ paths:
           schema:
             type: object
             properties:
-              Validator:
+              Validators:
                 type: array
                 items:
                   type: object
                   properties:
+                    cosmosAddress:
+                      type: string
                     ethAddress:
                       type: string
                     votingPower:
@@ -2662,11 +2664,13 @@ definitions:
   luqchain.bridge.QueryBlockValidatorInfoResponse:
     type: object
     properties:
-      Validator:
+      Validators:
         type: array
         items:
           type: object
           properties:
+            cosmosAddress:
+              type: string
             ethAddress:
               type: string
             votingPower:
@@ -2838,6 +2842,8 @@ definitions:
   luqchain.bridge.ValidatorInfo:
     type: object
     properties:
+      cosmosAddress:
+        type: string
       ethAddress:
         type: string
       votingPower:
