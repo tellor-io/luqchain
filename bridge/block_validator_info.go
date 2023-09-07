@@ -158,7 +158,7 @@ func CheckTimeAndRecoverSigner(sig TmSig, commonEncodedPart CommonEncodedVotePar
 	// Ensure valid timestamp size
 	encodedTimestampLen := len(sig.EncodedTimestamp)
 	if encodedTimestampLen < 6 || encodedTimestampLen > 12 {
-		return "", errors.New("Invalid timestamp's size")
+		return "", errors.New("invalid timestamp's size")
 	}
 
 	// Construct the encoded canonical vote
