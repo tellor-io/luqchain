@@ -146,5 +146,10 @@ contract BridgeTest is Test {
             encodedTimestamp: hex"08efd5dca70610c1a6caa801"
         });
         bridge.relayBlock(multistoreData, header, common, sigs);
+        (bytes32 stateHash, uint64 timestamp, uint32 nanoSeconds) = bridge
+            .blockDetails(100);
+        assertEq(stateHash, multistoreData.luqchainIAVLStateHash);
+        assertEq(timestamp, header.timeSecond);
+        assertEq(nanoSeconds, header.timeNanoSecondFraction);
     }
 }

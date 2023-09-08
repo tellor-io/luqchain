@@ -31,7 +31,7 @@ func (k msgServer) SubmitVal(goCtx context.Context, msg *types.MsgSubmitVal) (*t
 	}
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ReportKey))
 	addedReport := k.cdc.MustMarshal(&report)
-	qid, err := hashQdata(msg.Qdata)
+	qid, err := HashQdata(msg.Qdata)
 	if err != nil {
 		ctx.Logger().Error("invalid qdata", "qdata", msg.Qdata)
 		return nil, err

@@ -1,0 +1,74 @@
+syntax = "proto3";
+package luqchain.bridge;
+import "gogoproto/gogo.proto";
+option go_package = "luqchain/bridge/types";
+
+message IAVLMerklePathHex {
+    bool   is_data_on_right = 1;
+    uint32 subtree_height   = 2;
+    uint64 subtree_size     = 3;
+    uint64 subtree_version  = 4;
+    string sibling_hash     = 5;
+}
+
+message MulitstoreHex {
+    string luqchain_iavl_state_hash = 1;
+    string mint_store_merkle_hash = 2;
+    string icacontroller_to_icahost_merkle_hash = 3;
+    string feegrant_to_ibc_merkle_hash = 4;
+    string acc_to_evidence_merkle_hash = 5;
+    string params_to_vesting_merkle_hash = 6;
+}
+
+message BlockHeaderHex {
+    string versionChainidHash = 1; 
+    uint64 height = 2; 
+    uint64 timeSecond = 3; 
+    uint32 timeNanosecond = 4; 
+    string lastblockidCommitHash = 5; 
+    string nextvalidatorConsensusHash = 6; 
+    string lastresultsHash = 7; 
+    string evidenceProposerHash = 8; 
+}
+
+message CommonHex {
+    string SignedDataPrefix = 1;
+    string SignedDataSuffix = 2;
+}
+
+message TmSigHex {
+    string R = 1;
+    string S = 2;
+    uint32 V = 3;
+    string EncodedTimestamp = 4;
+}
+
+message Report {
+  
+    string qdata = 1; 
+    uint64 value = 2; 
+    uint64 timestamp = 3; 
+}
+
+message Proof {
+	uint64 blockHeight = 1;
+	ReportDataProof reportDataProof = 2;
+	BlockRelayProof blockRelayProof = 3;
+}
+
+message BlockRelayProof {
+    MulitstoreHex MultistoreProof = 1 [(gogoproto.nullable) = false];
+    BlockHeaderHex blockHeaderMerkleParts = 2 [(gogoproto.nullable) = false];
+    CommonHex commonEncodedVotePart = 3 [(gogoproto.nullable) = false];
+    repeated TmSigHex Signatures = 4 [(gogoproto.nullable) = false];
+    string appHash = 5;
+    string headerHash = 6;
+    string commonVote = 7;
+}
+
+message ReportDataProof {
+    string dataKey = 1;
+    Report report = 2 [(gogoproto.nullable) = false];
+    uint64 version = 3;
+    repeated IAVLMerklePathHex merklePaths = 4 [(gogoproto.nullable) = false];
+}

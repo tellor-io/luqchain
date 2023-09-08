@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package luqchain.bridge;
 
-option go_package = "luqchain/bridge";
+option go_package = "luqchain/bridge/types";
 
 message BlockHeaderMerkle {
   
@@ -14,16 +14,4 @@ message BlockHeaderMerkle {
   bytes nextvalidatorConsensusHash = 6; 
   bytes lastresultsHash = 7; 
   bytes evidenceProposerHash = 8; 
-}
-
-message BlockHeaderMerkleEvm {
-  
-  string versionChainidHash = 1; 
-  uint64 height = 2; 
-  uint64 timeSecond = 3; 
-  uint32 timeNanosecond = 4; 
-  string lastblockidCommitHash = 5; 
-  string nextvalidatorConsensusHash = 6; 
-  string lastresultsHash = 7; 
-  string evidenceProposerHash = 8; 
 }

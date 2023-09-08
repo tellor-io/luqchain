@@ -3,6 +3,7 @@ package bridge
 import (
 	"context"
 	fmt "fmt"
+	. "luqchain/bridge/types"
 	"sort"
 
 	"github.com/cometbft/cometbft/crypto/secp256k1"
@@ -10,62 +11,8 @@ import (
 	"github.com/cometbft/cometbft/libs/protoio"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	cometbft "github.com/cometbft/cometbft/types"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
-	// 	"fmt"
-	// 	"sort"
-	// 	"strconv"
-	// "github.com/cometbft/cometbft/crypto/secp256k1"
-	// "github.com/cometbft/cometbft/crypto/tmhash"
-	// "github.com/cometbft/cometbft/libs/protoio"
-	// tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
-	// cometbft "github.com/cometbft/cometbft/types"
-	// "github.com/cosmos/cosmos-sdk/client"
-	// "github.com/cosmos/cosmos-sdk/client/flags"
-	// "github.com/ethereum/go-ethereum/crypto"
-	// "github.com/spf13/cobra"
-	// "github.com/cometbft/cometbft/libs/bytes"
 )
-
-// // BlockCommand returns the verified block data for a given heights
-// func TendermintSignatures() *cobra.Command {
-// 	cmd := &cobra.Command{
-// 		Use:   "tendermint-signatures",
-// 		Short: "Get Signatures",
-// 		Args:  cobra.MaximumNArgs(1),
-// 		RunE: func(cmd *cobra.Command, args []string) error {
-// 			clientCtx, err := client.GetClientQueryContext(cmd)
-// 			if err != nil {
-// 				return err
-// 			}
-// 			var height *int64
-
-// 			// optional height
-// 			if len(args) > 0 {
-// 				h, err := strconv.Atoi(args[0])
-// 				if err != nil {
-// 					return err
-// 				}
-// 				if h > 0 {
-// 					tmp := int64(h)
-// 					height = &tmp
-// 				}
-// 			}
-
-// 			output, err := fetchSig(clientCtx, height)
-// 			if err != nil {
-// 				return err
-// 			}
-
-// 			fmt.Println(string(output))
-// 			return nil
-// 		},
-// 	}
-
-// 	cmd.Flags().StringP(flags.FlagNode, "n", "tcp://localhost:26657", "Node to connect to")
-
-// 	return cmd
-// }
 
 func (s bridgeServer) TmSig(_ context.Context, req *QueryTmRequest) (*QueryTmResponse, error) {
 	commit, err := s.getCommit(req.Height)
@@ -82,20 +29,6 @@ func (s bridgeServer) TmSig(_ context.Context, req *QueryTmRequest) (*QueryTmRes
 	}, nil
 }
 
-// func fetchSig(clientCtx client.Context, height *int64) ([]byte, error) {
-// 	node, err := clientCtx.GetNode()
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	commit, err := node.Commit(context.Background(), height)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	fmt.Println(&commit.SignedHeader)
-// 	fmt.Println(GetSignaturesAndPrefix(&commit.SignedHeader))
-// 	return nil, nil
-// }
-
 func recoverETHAddress(msg, sig, signer []byte) ([]byte, uint8, error) {
 	for i := uint8(0); i < 2; i++ {
 		pubuc, err := crypto.SigToPub(tmhash.Sum(msg), append(sig, byte(i)))
@@ -103,7 +36,7 @@ func recoverETHAddress(msg, sig, signer []byte) ([]byte, uint8, error) {
 			return nil, 0, err
 		}
 		pub := crypto.CompressPubkey(pubuc)
-		fmt.Println("pub", pub, "signer", signer)
+
 		var tmp [33]byte
 
 		copy(tmp[:], pub)
@@ -180,10 +113,10 @@ func GetSignaturesAndPrefix(info *cometbft.SignedHeader) ([]TmSig, CommonEncoded
 		}
 		addrs = append(addrs, string(addr))
 		mapAddrs[string(addr)] = TmSig{
-			common.BytesToHash(vote.Signature[:32]).Hex(),
-			common.BytesToHash(vote.Signature[32:]).Hex(),
+			vote.Signature[:32],
+			vote.Signature[32:],
 			uint32(v),
-			common.BytesToHash(encodedTimestamp).Hex(),
+			encodedTimestamp,
 		}
 	}
 	if len(addrs) == 0 {

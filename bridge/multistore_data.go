@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	fmt "fmt"
+	. "luqchain/bridge/types"
 	"luqchain/x/luqchain/keeper"
 	"luqchain/x/luqchain/types"
 
@@ -28,11 +29,14 @@ func (s bridgeServer) MultistoreTree(ctx context.Context, req *QueryMultistoreRe
 		context.Background(),
 		"/store/luqchain/key",
 		append(types.KeyPrefix(types.ReportKey), append(qid, tbytes...)...),
-		cometclient.ABCIQueryOptions{Height: *h, Prove: true},
+		cometclient.ABCIQueryOptions{Height: *h - 1, Prove: true},
 	)
 	if err != nil {
 		return nil, err
 	}
+	var report Report
+	types.ModuleCdc.MustUnmarshal(resp.Response.GetValue(), &report)
+
 	proof := resp.Response.GetProofOps()
 	if proof == nil {
 		return nil, nil
@@ -78,25 +82,19 @@ func (s bridgeServer) MultistoreTree(ctx context.Context, req *QueryMultistoreRe
 		}
 	}
 	paths := GetMerklePaths(iavlProof)
-	evmdata := make([]IAVLMerklePathEvm, len(paths))
-	for i, p := range paths {
-		evmdata[i].IsDataOnRight = p.IsDataOnRight
-		evmdata[i].SubtreeHeight = p.SubtreeHeight
-		evmdata[i].SubtreeSize = int64(p.SubtreeSize)
-		evmdata[i].SubtreeVersion = int64(p.SubtreeVersion)
-		evmdata[i].SiblingHash = bytes.HexBytes(p.SiblingHash).String()
-	}
 
 	return &QueryMultistoreResponse{
-		MutiStoreTree: MutiStoreTreeFields{
-			LuqchainIavlStateHash:            bytes.HexBytes(multistoreProof.Value).String(),
-			MintStoreMerkleHash:              bytes.HexBytes(multistoreProof.Path[0].Suffix).String(),
-			IcacontrollerToIcahostMerkleHash: bytes.HexBytes(multistoreProof.Path[1].Prefix[1:]).String(),
-			FeegrantToIbcMerkleHash:          bytes.HexBytes(multistoreProof.Path[2].Prefix[1:]).String(),
-			AccToEvidenceMerkleHash:          bytes.HexBytes(multistoreProof.Path[3].Prefix[1:]).String(),
-			ParamsToVestingMerkleHash:        bytes.HexBytes(multistoreProof.Path[4].Suffix).String(),
+		MultiStoreTree: MultiStoreTreeFields{
+			LuqchainIavlStateHash:            multistoreProof.Value,
+			MintStoreMerkleHash:              multistoreProof.Path[0].Suffix,
+			IcacontrollerToIcahostMerkleHash: multistoreProof.Path[1].Prefix[1:],
+			FeegrantToIbcMerkleHash:          multistoreProof.Path[2].Prefix[1:],
+			AccToEvidenceMerkleHash:          multistoreProof.Path[3].Prefix[1:],
+			ParamsToVestingMerkleHash:        multistoreProof.Path[4].Suffix,
 		},
-		Iavl: evmdata,
+		Iavl:    paths,
+		Version: decodeIAVLLeafPrefix(iavlProof.Leaf.Prefix),
+		Report:  report,
 	}, nil
 }
 
@@ -132,12 +130,10 @@ func GetMerklePaths(iavlEp *ics23.ExistenceProof) []IAVLMerklePath {
 	return paths
 }
 
-// func encodeToEthFormat(merklePath IAVLMerklePath) IAVLMerklePathEvm {
-// 	return IAVLMerklePathEvm{
-// 		merklePath.IsDataOnRight,
-// 		merklePath.SubtreeHeight,
-// 		int64(merklePath.SubtreeSize),
-// 		int64(merklePath.SubtreeVersion),
-// 		bytes.HexBytes(merklePath.SiblingHash).String(),
-// 	}
-// }
+func decodeIAVLLeafPrefix(prefix []byte) uint64 {
+	// ref: https://github.com/cosmos/iavl/blob/master/proof_ics23.go#L96
+	_, n1 := binary.Varint(prefix)
+	_, n2 := binary.Varint(prefix[n1:])
+	version, _ := binary.Varint(prefix[n1+n2:])
+	return uint64(version)
+}

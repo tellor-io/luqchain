@@ -2,6 +2,7 @@ package bridge
 
 import (
 	"context"
+	. "luqchain/bridge/types"
 
 	coretypes "github.com/cometbft/cometbft/rpc/core/types"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -47,59 +48,3 @@ func (s bridgeServer) getCommit(height int64) (*coretypes.ResultCommit, error) {
 	commit, err := node.Commit(context.Background(), h)
 	return commit, err
 }
-
-// package bridge
-
-// import (
-// 	"context"
-
-// 	"github.com/cometbft/cometbft/crypto/merkle"
-// 	"github.com/ethereum/go-ethereum/common"
-// )
-
-// ChainID returns QueryChainIDResponse that has chain id from ctx
-// func (s bridgeServer) BlockheaderMerkleEVM(ctx context.Context, req *QueryBlockheaderMerkleRequest) (*QueryBlockheaderMerkleEVMResponse, error) {
-// commit, err := s.getCommit(ctx, req.Height)
-// if err != nil {
-// 	panic(err)
-// }
-
-// hbz, err := commit.Header.Version.Marshal()
-// if err != nil {
-// 	panic(err)
-// }
-// protobufBlockId := commit.Header.LastBlockID.ToProto()
-// bytesBlockId, err := protobufBlockId.Marshal()
-// if err != nil {
-// 	panic(err)
-// }
-// headerEvm := BlockHeaderMerkleEVM{
-// 	VersionChainidHash: common.BytesToHash(merkle.HashFromByteSlices([][]byte{
-// 		hbz,
-// 		cdcEncode(commit.Header.ChainID),
-// 	})).String(),
-// 	Height:         uint64(commit.Header.Height),
-// 	TimeSecond:     uint64(commit.Header.Time.Unix()),
-// 	TimeNanosecond: uint32(commit.Header.Time.Nanosecond()),
-// 	LastblockidCommitHash: common.BytesToHash(merkle.HashFromByteSlices([][]byte{
-// 		bytesBlockId,
-// 		cdcEncode(commit.Header.LastCommitHash),
-// 		cdcEncode(commit.Header.DataHash),
-// 		cdcEncode(commit.Header.ValidatorsHash),
-// 	})).String(),
-// 	NextvalidatorConsensusHash: common.BytesToHash(merkle.HashFromByteSlices([][]byte{
-// 		cdcEncode(commit.Header.NextValidatorsHash),
-// 		cdcEncode(commit.Header.ConsensusHash),
-// 	})).String(),
-// 	LastresultsHash: common.BytesToHash(merkle.HashFromByteSlices([][]byte{
-// 		cdcEncode(commit.Header.LastResultsHash),
-// 	})).String(),
-// 	EvidenceProposerHash: common.BytesToHash(merkle.HashFromByteSlices([][]byte{
-// 		cdcEncode(commit.Header.EvidenceHash),
-// 		cdcEncode(commit.Header.ProposerAddress),
-// 	})).String(),
-// }
-// 	return &QueryBlockheaderMerkleEVMResponse{
-// 		BlockheaderMerkleEvm: headerEvm,
-// 	}, nil
-// }
