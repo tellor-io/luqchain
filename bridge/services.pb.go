@@ -274,6 +274,206 @@ func (m *QueryMultistoreResponse) GetIavl() []IAVLMerklePathEvm {
 	return nil
 }
 
+type QueryInclusionProofRequest struct {
+	Height    int64  `protobuf:"varint,1,opt,name=height,proto3" json:"height,omitempty"`
+	Qid       string `protobuf:"bytes,2,opt,name=qid,proto3" json:"qid,omitempty"`
+	Timestamp uint64 `protobuf:"varint,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+}
+
+func (m *QueryInclusionProofRequest) Reset()         { *m = QueryInclusionProofRequest{} }
+func (m *QueryInclusionProofRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryInclusionProofRequest) ProtoMessage()    {}
+func (*QueryInclusionProofRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_b20ab372cf6c0d8e, []int{5}
+}
+func (m *QueryInclusionProofRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryInclusionProofRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryInclusionProofRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryInclusionProofRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryInclusionProofRequest.Merge(m, src)
+}
+func (m *QueryInclusionProofRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryInclusionProofRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryInclusionProofRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryInclusionProofRequest proto.InternalMessageInfo
+
+func (m *QueryInclusionProofRequest) GetHeight() int64 {
+	if m != nil {
+		return m.Height
+	}
+	return 0
+}
+
+func (m *QueryInclusionProofRequest) GetQid() string {
+	if m != nil {
+		return m.Qid
+	}
+	return ""
+}
+
+func (m *QueryInclusionProofRequest) GetTimestamp() uint64 {
+	if m != nil {
+		return m.Timestamp
+	}
+	return 0
+}
+
+type QueryInclusionProofResponse struct {
+	InclusionProofStuff InclusionProofStuffFields `protobuf:"bytes,1,opt,name=InclusionProofStuff,proto3" json:"InclusionProofStuff"`
+	MerklePath          []IAVLMerklePathEvm       `protobuf:"bytes,2,rep,name=MerklePath,proto3" json:"MerklePath"`
+}
+
+func (m *QueryInclusionProofResponse) Reset()         { *m = QueryInclusionProofResponse{} }
+func (m *QueryInclusionProofResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryInclusionProofResponse) ProtoMessage()    {}
+func (*QueryInclusionProofResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_b20ab372cf6c0d8e, []int{6}
+}
+func (m *QueryInclusionProofResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryInclusionProofResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryInclusionProofResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryInclusionProofResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryInclusionProofResponse.Merge(m, src)
+}
+func (m *QueryInclusionProofResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryInclusionProofResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryInclusionProofResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryInclusionProofResponse proto.InternalMessageInfo
+
+func (m *QueryInclusionProofResponse) GetInclusionProofStuff() InclusionProofStuffFields {
+	if m != nil {
+		return m.InclusionProofStuff
+	}
+	return InclusionProofStuffFields{}
+}
+
+func (m *QueryInclusionProofResponse) GetMerklePath() []IAVLMerklePathEvm {
+	if m != nil {
+		return m.MerklePath
+	}
+	return nil
+}
+
+type QueryBlockValidatorInfoRequest struct {
+	Height int64 `protobuf:"varint,1,opt,name=height,proto3" json:"height,omitempty"`
+}
+
+func (m *QueryBlockValidatorInfoRequest) Reset()         { *m = QueryBlockValidatorInfoRequest{} }
+func (m *QueryBlockValidatorInfoRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryBlockValidatorInfoRequest) ProtoMessage()    {}
+func (*QueryBlockValidatorInfoRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_b20ab372cf6c0d8e, []int{7}
+}
+func (m *QueryBlockValidatorInfoRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryBlockValidatorInfoRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryBlockValidatorInfoRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryBlockValidatorInfoRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryBlockValidatorInfoRequest.Merge(m, src)
+}
+func (m *QueryBlockValidatorInfoRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryBlockValidatorInfoRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryBlockValidatorInfoRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryBlockValidatorInfoRequest proto.InternalMessageInfo
+
+func (m *QueryBlockValidatorInfoRequest) GetHeight() int64 {
+	if m != nil {
+		return m.Height
+	}
+	return 0
+}
+
+type QueryBlockValidatorInfoResponse struct {
+	Validators []ValidatorInfo `protobuf:"bytes,1,rep,name=Validators,proto3" json:"Validators"`
+}
+
+func (m *QueryBlockValidatorInfoResponse) Reset()         { *m = QueryBlockValidatorInfoResponse{} }
+func (m *QueryBlockValidatorInfoResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryBlockValidatorInfoResponse) ProtoMessage()    {}
+func (*QueryBlockValidatorInfoResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_b20ab372cf6c0d8e, []int{8}
+}
+func (m *QueryBlockValidatorInfoResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryBlockValidatorInfoResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryBlockValidatorInfoResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryBlockValidatorInfoResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryBlockValidatorInfoResponse.Merge(m, src)
+}
+func (m *QueryBlockValidatorInfoResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryBlockValidatorInfoResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryBlockValidatorInfoResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryBlockValidatorInfoResponse proto.InternalMessageInfo
+
+func (m *QueryBlockValidatorInfoResponse) GetValidators() []ValidatorInfo {
+	if m != nil {
+		return m.Validators
+	}
+	return nil
+}
+
 type QueryTmRequest struct {
 	Height int64 `protobuf:"varint,1,opt,name=height,proto3" json:"height,omitempty"`
 }
@@ -282,7 +482,7 @@ func (m *QueryTmRequest) Reset()         { *m = QueryTmRequest{} }
 func (m *QueryTmRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryTmRequest) ProtoMessage()    {}
 func (*QueryTmRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b20ab372cf6c0d8e, []int{5}
+	return fileDescriptor_b20ab372cf6c0d8e, []int{9}
 }
 func (m *QueryTmRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -327,7 +527,7 @@ func (m *QueryTmResponse) Reset()         { *m = QueryTmResponse{} }
 func (m *QueryTmResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryTmResponse) ProtoMessage()    {}
 func (*QueryTmResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_b20ab372cf6c0d8e, []int{6}
+	return fileDescriptor_b20ab372cf6c0d8e, []int{10}
 }
 func (m *QueryTmResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -376,6 +576,10 @@ func init() {
 	proto.RegisterType((*QueryBlockheaderMerkleEVMResponse)(nil), "luqchain.bridge.QueryBlockheaderMerkleEVMResponse")
 	proto.RegisterType((*QueryMultistoreRequest)(nil), "luqchain.bridge.QueryMultistoreRequest")
 	proto.RegisterType((*QueryMultistoreResponse)(nil), "luqchain.bridge.QueryMultistoreResponse")
+	proto.RegisterType((*QueryInclusionProofRequest)(nil), "luqchain.bridge.QueryInclusionProofRequest")
+	proto.RegisterType((*QueryInclusionProofResponse)(nil), "luqchain.bridge.QueryInclusionProofResponse")
+	proto.RegisterType((*QueryBlockValidatorInfoRequest)(nil), "luqchain.bridge.QueryBlockValidatorInfoRequest")
+	proto.RegisterType((*QueryBlockValidatorInfoResponse)(nil), "luqchain.bridge.QueryBlockValidatorInfoResponse")
 	proto.RegisterType((*QueryTmRequest)(nil), "luqchain.bridge.QueryTmRequest")
 	proto.RegisterType((*QueryTmResponse)(nil), "luqchain.bridge.QueryTmResponse")
 }
@@ -383,46 +587,58 @@ func init() {
 func init() { proto.RegisterFile("luqchain/bridge/services.proto", fileDescriptor_b20ab372cf6c0d8e) }
 
 var fileDescriptor_b20ab372cf6c0d8e = []byte{
-	// 621 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x54, 0x41, 0x6f, 0x12, 0x41,
-	0x14, 0x66, 0x0a, 0x25, 0xe9, 0x34, 0x16, 0x3b, 0x21, 0xb8, 0xd9, 0xb6, 0xdb, 0x75, 0x6d, 0x2d,
-	0x35, 0x91, 0x4d, 0xf0, 0xe0, 0xc5, 0x8b, 0x28, 0x46, 0x13, 0x49, 0x90, 0x12, 0x0e, 0x5e, 0x70,
-	0x61, 0x27, 0xcb, 0xd8, 0x9d, 0x1d, 0xd8, 0x1d, 0x88, 0x5e, 0x8d, 0x07, 0x13, 0x2f, 0x26, 0xfe,
-	0x01, 0xaf, 0xfd, 0x27, 0x3d, 0x99, 0x26, 0x5e, 0x3c, 0x19, 0x03, 0xfe, 0x10, 0xc3, 0xec, 0x00,
-	0xed, 0xee, 0x22, 0xf5, 0x36, 0x3b, 0xef, 0x7b, 0xdf, 0xf7, 0xbd, 0xb7, 0xef, 0x0d, 0xd4, 0xdc,
-	0xe1, 0xa0, 0xdb, 0xb3, 0x88, 0x67, 0x76, 0x7c, 0x62, 0x3b, 0xd8, 0x0c, 0xb0, 0x3f, 0x22, 0x5d,
-	0x1c, 0x94, 0xfa, 0x3e, 0xe3, 0x0c, 0xe5, 0x66, 0xf1, 0x52, 0x18, 0x57, 0xf3, 0x0e, 0x73, 0x98,
-	0x88, 0x99, 0xd3, 0x53, 0x08, 0x53, 0x77, 0x1d, 0xc6, 0x1c, 0x17, 0x9b, 0x56, 0x9f, 0x98, 0x96,
-	0xe7, 0x31, 0x6e, 0x71, 0xc2, 0x3c, 0x49, 0xa2, 0x1e, 0x47, 0x45, 0x3a, 0x2e, 0xeb, 0x9e, 0xb6,
-	0x7b, 0xd8, 0xb2, 0xb1, 0xdf, 0xa6, 0xd8, 0x3f, 0x75, 0xb1, 0x84, 0xea, 0x51, 0x28, 0x1d, 0xba,
-	0x9c, 0x04, 0x9c, 0xf9, 0x33, 0xc4, 0x4e, 0x14, 0xc1, 0x69, 0x40, 0x9c, 0x30, 0x68, 0x3c, 0x84,
-	0x7b, 0xaf, 0x86, 0xd8, 0x7f, 0x5f, 0x99, 0x0a, 0x84, 0xfc, 0x35, 0x41, 0xdf, 0xc0, 0x83, 0x21,
-	0x0e, 0x38, 0x2a, 0xc0, 0x6c, 0x0f, 0x13, 0xa7, 0xc7, 0x15, 0xa0, 0x83, 0x62, 0xba, 0x21, 0xbf,
-	0x8c, 0x77, 0x50, 0x5b, 0x96, 0x18, 0xf4, 0x99, 0x17, 0x60, 0xd4, 0x82, 0xdb, 0x9d, 0x68, 0x50,
-	0x90, 0x6c, 0x96, 0x8d, 0x52, 0xa4, 0x4b, 0x25, 0x41, 0xf3, 0xfc, 0x12, 0xb2, 0x92, 0x39, 0xff,
-	0xb5, 0x9f, 0x6a, 0xc4, 0x29, 0x8c, 0x8f, 0x00, 0xde, 0x4e, 0x96, 0xae, 0xb6, 0x6a, 0x73, 0xf5,
-	0x36, 0xcc, 0xc7, 0x52, 0xab, 0x23, 0x2a, 0x0d, 0x1c, 0xae, 0x36, 0x50, 0x1d, 0x51, 0xe9, 0x21,
-	0x91, 0xc8, 0x78, 0x03, 0x0b, 0xc2, 0x45, 0x6d, 0xde, 0xef, 0x15, 0x2d, 0x43, 0x37, 0x61, 0x7a,
-	0x40, 0x6c, 0x65, 0x4d, 0x07, 0xc5, 0x8d, 0xc6, 0xf4, 0x88, 0x76, 0xe1, 0x06, 0x27, 0x14, 0x07,
-	0xdc, 0xa2, 0x7d, 0x25, 0xad, 0x83, 0x62, 0xa6, 0xb1, 0xb8, 0x30, 0xce, 0x00, 0xbc, 0x15, 0x93,
-	0x90, 0xe5, 0xd5, 0xe1, 0x8d, 0xda, 0x90, 0x93, 0x93, 0xe9, 0x65, 0xd3, 0xc7, 0xb3, 0xc6, 0x1e,
-	0xc4, 0xea, 0xba, 0x82, 0x7a, 0x46, 0xb0, 0x6b, 0x07, 0xb2, 0xac, 0xab, 0x04, 0xe8, 0x11, 0xcc,
-	0x10, 0x6b, 0xe4, 0x2a, 0x6b, 0x7a, 0x3a, 0xf1, 0x0f, 0xbd, 0x78, 0xdc, 0x7a, 0x19, 0x56, 0x5f,
-	0xb7, 0x78, 0x6f, 0xd1, 0x1d, 0x91, 0x65, 0x14, 0xe1, 0x96, 0xb0, 0xda, 0xa4, 0xab, 0x06, 0xe7,
-	0x33, 0x80, 0xb9, 0x39, 0x54, 0x56, 0x53, 0x86, 0xeb, 0x9c, 0x9e, 0x10, 0x47, 0x01, 0x42, 0xbc,
-	0x10, 0x13, 0x6f, 0x4e, 0xa3, 0x52, 0x30, 0x84, 0xa2, 0xa7, 0x30, 0xdb, 0x65, 0x94, 0x32, 0x4f,
-	0x34, 0x74, 0xb3, 0x7c, 0x37, 0x96, 0xf4, 0x44, 0x84, 0xab, 0x5e, 0x97, 0xd9, 0xd8, 0x6e, 0x31,
-	0x8e, 0xeb, 0x96, 0xcf, 0x25, 0x89, 0xcc, 0x2d, 0x7f, 0xcf, 0xc0, 0x6c, 0x45, 0xc0, 0xd1, 0x37,
-	0x00, 0xb7, 0x63, 0x23, 0x85, 0x4a, 0x31, 0xda, 0x7f, 0xee, 0x8b, 0x6a, 0x5e, 0x1b, 0x1f, 0xd6,
-	0x6e, 0xdc, 0xfb, 0xf0, 0xe3, 0xcf, 0xd7, 0xb5, 0x03, 0x64, 0x98, 0x89, 0x4b, 0x1f, 0xe6, 0x84,
-	0x2b, 0x8f, 0xce, 0x00, 0xcc, 0x27, 0x4d, 0xfd, 0x7f, 0xbb, 0x2c, 0x5f, 0x13, 0x7f, 0x69, 0xa3,
-	0x8c, 0xfb, 0xc2, 0xe8, 0x11, 0x3a, 0x5c, 0x6d, 0x14, 0x8f, 0x28, 0xfa, 0x04, 0xe0, 0xd6, 0x62,
-	0x70, 0xc5, 0x88, 0x1d, 0x25, 0xab, 0xc6, 0x36, 0x48, 0x2d, 0xae, 0x06, 0x4a, 0x53, 0x77, 0x84,
-	0xa9, 0x3d, 0xb4, 0x63, 0x2e, 0x7f, 0x07, 0xd1, 0x5b, 0xb8, 0x2e, 0x06, 0x08, 0xed, 0x27, 0xf3,
-	0xce, 0x87, 0x56, 0xd5, 0x97, 0x03, 0xa4, 0xa0, 0x26, 0x04, 0x15, 0x54, 0x30, 0x13, 0x9f, 0xd5,
-	0xca, 0xf1, 0xf9, 0x58, 0x03, 0x17, 0x63, 0x0d, 0xfc, 0x1e, 0x6b, 0xe0, 0xcb, 0x44, 0x4b, 0x5d,
-	0x4c, 0xb4, 0xd4, 0xcf, 0x89, 0x96, 0x7a, 0x9d, 0x8b, 0x24, 0x74, 0xb2, 0xe2, 0x09, 0x7e, 0xf0,
-	0x37, 0x00, 0x00, 0xff, 0xff, 0xa4, 0x33, 0xef, 0x49, 0x53, 0x06, 0x00, 0x00,
+	// 805 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0x4d, 0x6f, 0xdb, 0x46,
+	0x10, 0xd5, 0x5a, 0xb6, 0x0a, 0x8f, 0x51, 0xbb, 0xde, 0x1a, 0xaa, 0x40, 0xdb, 0x94, 0xcc, 0xda,
+	0xb5, 0xec, 0xb6, 0x62, 0xa1, 0x1e, 0xda, 0x43, 0x2f, 0x55, 0xad, 0xc2, 0x06, 0x2a, 0x40, 0x95,
+	0x0d, 0x1d, 0x7a, 0x71, 0x29, 0x71, 0x45, 0x6d, 0x4c, 0x72, 0x65, 0x72, 0x25, 0x24, 0xd7, 0x20,
+	0x87, 0x04, 0xb9, 0x04, 0x48, 0x7e, 0x40, 0x72, 0xf4, 0x3f, 0x31, 0x90, 0x8b, 0x81, 0x5c, 0x72,
+	0x0a, 0x02, 0x3b, 0x3f, 0x24, 0xd0, 0x72, 0xf5, 0x49, 0xea, 0xc3, 0x40, 0x6e, 0x12, 0xe7, 0xcd,
+	0xbc, 0x37, 0xc3, 0xd9, 0xb7, 0x04, 0xd5, 0x6e, 0x5f, 0xd6, 0x9b, 0x06, 0x75, 0xf5, 0x9a, 0x47,
+	0x4d, 0x8b, 0xe8, 0x3e, 0xf1, 0x3a, 0xb4, 0x4e, 0xfc, 0x5c, 0xcb, 0x63, 0x9c, 0xe1, 0xb5, 0x5e,
+	0x3c, 0x17, 0xc4, 0x95, 0x0d, 0x8b, 0x59, 0x4c, 0xc4, 0xf4, 0xee, 0xaf, 0x00, 0xa6, 0x6c, 0x59,
+	0x8c, 0x59, 0x36, 0xd1, 0x8d, 0x16, 0xd5, 0x0d, 0xd7, 0x65, 0xdc, 0xe0, 0x94, 0xb9, 0xb2, 0x88,
+	0x72, 0x30, 0x4e, 0x52, 0xb3, 0x59, 0xfd, 0xe2, 0xbc, 0x49, 0x0c, 0x93, 0x78, 0xe7, 0x0e, 0xf1,
+	0x2e, 0x6c, 0x22, 0xa1, 0x99, 0x71, 0xa8, 0xd3, 0xb6, 0x39, 0xf5, 0x39, 0xf3, 0x7a, 0x88, 0xcd,
+	0x71, 0x04, 0x77, 0x7c, 0x6a, 0xc9, 0xe0, 0xee, 0x78, 0x90, 0xba, 0x75, 0xbb, 0xed, 0x53, 0xe6,
+	0xb6, 0x3c, 0xc6, 0x1a, 0x12, 0x95, 0x8d, 0xd4, 0xd3, 0x31, 0x6c, 0x6a, 0x1a, 0x9c, 0x79, 0xd4,
+	0x6d, 0xc8, 0xbe, 0xb4, 0xdf, 0x60, 0xfb, 0xdf, 0x36, 0xf1, 0x1e, 0x15, 0xba, 0x80, 0x40, 0x6f,
+	0x49, 0xc8, 0xad, 0x90, 0xcb, 0x36, 0xf1, 0x39, 0x4e, 0x42, 0xa2, 0x49, 0xa8, 0xd5, 0xe4, 0x29,
+	0x94, 0x41, 0xd9, 0x78, 0x45, 0xfe, 0xd3, 0x1e, 0x82, 0x3a, 0x29, 0xd1, 0x6f, 0x31, 0xd7, 0x27,
+	0xb8, 0x0a, 0xeb, 0xb5, 0xf1, 0xa0, 0x28, 0xb2, 0x92, 0xd7, 0x72, 0x63, 0x53, 0xcf, 0x89, 0x32,
+	0xc7, 0x43, 0xc8, 0xc2, 0xe2, 0xf5, 0x87, 0x74, 0xac, 0x12, 0x2e, 0xa1, 0x3d, 0x41, 0xb0, 0x13,
+	0x4d, 0x5d, 0xac, 0x96, 0xfa, 0xec, 0xe7, 0xb0, 0x11, 0x4a, 0x2d, 0x76, 0x1c, 0x29, 0x60, 0x6f,
+	0xb6, 0x80, 0x62, 0xc7, 0x91, 0x1a, 0x22, 0x0b, 0x69, 0xff, 0x43, 0x52, 0xa8, 0x28, 0xf5, 0xdf,
+	0xdf, 0x8c, 0x91, 0xe1, 0x6f, 0x20, 0x7e, 0x49, 0xcd, 0xd4, 0x42, 0x06, 0x65, 0x97, 0x2b, 0xdd,
+	0x9f, 0x78, 0x0b, 0x96, 0x39, 0x75, 0x88, 0xcf, 0x0d, 0xa7, 0x95, 0x8a, 0x67, 0x50, 0x76, 0xb1,
+	0x32, 0x78, 0xa0, 0x5d, 0x21, 0xf8, 0x2e, 0x44, 0x21, 0xdb, 0x2b, 0xc3, 0xd7, 0xa5, 0x36, 0xa7,
+	0xa7, 0xdd, 0x87, 0x67, 0x1e, 0xe9, 0x0d, 0x76, 0x37, 0xd4, 0xd7, 0x08, 0xea, 0x6f, 0x4a, 0x6c,
+	0xd3, 0x97, 0x6d, 0x8d, 0x16, 0xc0, 0x7f, 0xc0, 0x22, 0x35, 0x3a, 0x76, 0x6a, 0x21, 0x13, 0x8f,
+	0x7c, 0x43, 0x27, 0x7f, 0x56, 0xff, 0x09, 0xba, 0x2f, 0x1b, 0xbc, 0x39, 0x98, 0x8e, 0xc8, 0xd2,
+	0x4c, 0x50, 0x84, 0xd4, 0x93, 0xde, 0x3a, 0x96, 0xbb, 0xeb, 0xf8, 0xa5, 0x27, 0xf2, 0x16, 0xc1,
+	0x66, 0x24, 0x8d, 0x9c, 0x4a, 0x0d, 0xbe, 0x1d, 0x8d, 0x9c, 0xf2, 0x76, 0xa3, 0x21, 0x67, 0x73,
+	0x18, 0x6e, 0x29, 0x8c, 0x1d, 0x99, 0x50, 0x54, 0x31, 0x7c, 0x0c, 0x30, 0x18, 0xc3, 0xbd, 0xa7,
+	0x35, 0x94, 0xab, 0xfd, 0x3e, 0x7c, 0x84, 0xaa, 0xbd, 0xc3, 0x79, 0xe2, 0x36, 0xd8, 0xac, 0xc3,
+	0x67, 0x41, 0x7a, 0x62, 0xa6, 0x1c, 0xc5, 0x11, 0x40, 0x3f, 0xe0, 0xa7, 0x90, 0x90, 0xa9, 0x86,
+	0x64, 0x8e, 0xe4, 0xf6, 0x24, 0x0e, 0xf2, 0xb4, 0x2c, 0xac, 0x0a, 0xa2, 0x33, 0x67, 0x96, 0xa4,
+	0xe7, 0x08, 0xd6, 0xfa, 0x50, 0xa9, 0x21, 0x0f, 0x4b, 0xdc, 0x39, 0xa5, 0x96, 0xa4, 0x4f, 0x86,
+	0xe8, 0xcf, 0xba, 0x51, 0x49, 0x1b, 0x40, 0xf1, 0x11, 0x24, 0xea, 0xcc, 0x71, 0x98, 0x2b, 0xb6,
+	0x62, 0x25, 0xff, 0x43, 0x28, 0xe9, 0x2f, 0x11, 0x2e, 0xba, 0x75, 0x66, 0x12, 0xb3, 0xca, 0x38,
+	0x29, 0x1b, 0x1e, 0x97, 0x45, 0x64, 0x6e, 0xfe, 0xd9, 0x57, 0x90, 0x28, 0x08, 0x38, 0x7e, 0x8d,
+	0x60, 0x3d, 0xe4, 0x14, 0x38, 0x17, 0x2a, 0x3b, 0xd5, 0x06, 0x15, 0x7d, 0x6e, 0x7c, 0xd0, 0xbb,
+	0x76, 0xf8, 0xf8, 0xdd, 0xa7, 0x97, 0x0b, 0xbb, 0x58, 0xd3, 0x23, 0xbd, 0x38, 0xc8, 0x09, 0x6e,
+	0x06, 0x7c, 0x85, 0x60, 0x23, 0xca, 0xcc, 0xee, 0xad, 0x32, 0x3f, 0x27, 0x7e, 0xc8, 0x28, 0xb5,
+	0x9f, 0x85, 0xd0, 0x7d, 0xbc, 0x37, 0x5b, 0x28, 0xe9, 0x38, 0xf8, 0x29, 0x82, 0xd5, 0x81, 0x1f,
+	0x09, 0xe7, 0xd8, 0x8f, 0x66, 0x0d, 0x19, 0xa3, 0x92, 0x9d, 0x0d, 0x94, 0xa2, 0xbe, 0x17, 0xa2,
+	0xb6, 0xf1, 0xa6, 0x3e, 0xf9, 0xba, 0xc4, 0x0f, 0x60, 0x49, 0x2c, 0x10, 0x4e, 0x47, 0xd7, 0xed,
+	0x2f, 0xad, 0x92, 0x99, 0x0c, 0x90, 0x84, 0xaa, 0x20, 0x4c, 0xe1, 0xa4, 0x1e, 0x79, 0xfb, 0xe2,
+	0x57, 0x08, 0x56, 0x47, 0xdd, 0x00, 0xff, 0x18, 0x5d, 0x34, 0xd2, 0x01, 0x95, 0x9f, 0xe6, 0x03,
+	0x4b, 0x35, 0xfb, 0x42, 0xcd, 0x0e, 0x4e, 0xeb, 0xd3, 0xaf, 0x7b, 0xfc, 0x06, 0x01, 0x0e, 0x9b,
+	0x00, 0x9e, 0xb6, 0xad, 0x51, 0x46, 0xa3, 0xfc, 0x32, 0x7f, 0x82, 0x94, 0x98, 0x15, 0x12, 0x35,
+	0x9c, 0xd1, 0xa7, 0x7f, 0x6b, 0xf8, 0x85, 0x83, 0xeb, 0x5b, 0x15, 0xdd, 0xdc, 0xaa, 0xe8, 0xe3,
+	0xad, 0x8a, 0x5e, 0xdc, 0xa9, 0xb1, 0x9b, 0x3b, 0x35, 0xf6, 0xfe, 0x4e, 0x8d, 0xfd, 0xb7, 0x36,
+	0x96, 0x5a, 0x4b, 0x88, 0x8f, 0x92, 0x5f, 0x3f, 0x07, 0x00, 0x00, 0xff, 0xff, 0xce, 0xa3, 0xb2,
+	0xf3, 0xb5, 0x09, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -441,6 +657,8 @@ type BridgeClient interface {
 	BlockheaderMerkleEVM(ctx context.Context, in *QueryBlockheaderMerkleRequest, opts ...grpc.CallOption) (*QueryBlockheaderMerkleEVMResponse, error)
 	MultistoreTree(ctx context.Context, in *QueryMultistoreRequest, opts ...grpc.CallOption) (*QueryMultistoreResponse, error)
 	TmSig(ctx context.Context, in *QueryTmRequest, opts ...grpc.CallOption) (*QueryTmResponse, error)
+	InclusionProof(ctx context.Context, in *QueryInclusionProofRequest, opts ...grpc.CallOption) (*QueryInclusionProofResponse, error)
+	BlockValidatorInfo(ctx context.Context, in *QueryBlockValidatorInfoRequest, opts ...grpc.CallOption) (*QueryBlockValidatorInfoResponse, error)
 }
 
 type bridgeClient struct {
@@ -487,12 +705,32 @@ func (c *bridgeClient) TmSig(ctx context.Context, in *QueryTmRequest, opts ...gr
 	return out, nil
 }
 
+func (c *bridgeClient) InclusionProof(ctx context.Context, in *QueryInclusionProofRequest, opts ...grpc.CallOption) (*QueryInclusionProofResponse, error) {
+	out := new(QueryInclusionProofResponse)
+	err := c.cc.Invoke(ctx, "/luqchain.bridge.Bridge/InclusionProof", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bridgeClient) BlockValidatorInfo(ctx context.Context, in *QueryBlockValidatorInfoRequest, opts ...grpc.CallOption) (*QueryBlockValidatorInfoResponse, error) {
+	out := new(QueryBlockValidatorInfoResponse)
+	err := c.cc.Invoke(ctx, "/luqchain.bridge.Bridge/BlockValidatorInfo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BridgeServer is the server API for Bridge service.
 type BridgeServer interface {
 	BlockheaderMerkle(context.Context, *QueryBlockheaderMerkleRequest) (*QueryBlockheaderMerkleResponse, error)
 	BlockheaderMerkleEVM(context.Context, *QueryBlockheaderMerkleRequest) (*QueryBlockheaderMerkleEVMResponse, error)
 	MultistoreTree(context.Context, *QueryMultistoreRequest) (*QueryMultistoreResponse, error)
 	TmSig(context.Context, *QueryTmRequest) (*QueryTmResponse, error)
+	InclusionProof(context.Context, *QueryInclusionProofRequest) (*QueryInclusionProofResponse, error)
+	BlockValidatorInfo(context.Context, *QueryBlockValidatorInfoRequest) (*QueryBlockValidatorInfoResponse, error)
 }
 
 // UnimplementedBridgeServer can be embedded to have forward compatible implementations.
@@ -510,6 +748,12 @@ func (*UnimplementedBridgeServer) MultistoreTree(ctx context.Context, req *Query
 }
 func (*UnimplementedBridgeServer) TmSig(ctx context.Context, req *QueryTmRequest) (*QueryTmResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TmSig not implemented")
+}
+func (*UnimplementedBridgeServer) InclusionProof(ctx context.Context, req *QueryInclusionProofRequest) (*QueryInclusionProofResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InclusionProof not implemented")
+}
+func (*UnimplementedBridgeServer) BlockValidatorInfo(ctx context.Context, req *QueryBlockValidatorInfoRequest) (*QueryBlockValidatorInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BlockValidatorInfo not implemented")
 }
 
 func RegisterBridgeServer(s grpc1.Server, srv BridgeServer) {
@@ -588,6 +832,42 @@ func _Bridge_TmSig_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Bridge_InclusionProof_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryInclusionProofRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BridgeServer).InclusionProof(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/luqchain.bridge.Bridge/InclusionProof",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BridgeServer).InclusionProof(ctx, req.(*QueryInclusionProofRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Bridge_BlockValidatorInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryBlockValidatorInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BridgeServer).BlockValidatorInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/luqchain.bridge.Bridge/BlockValidatorInfo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BridgeServer).BlockValidatorInfo(ctx, req.(*QueryBlockValidatorInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Bridge_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "luqchain.bridge.Bridge",
 	HandlerType: (*BridgeServer)(nil),
@@ -607,6 +887,14 @@ var _Bridge_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TmSig",
 			Handler:    _Bridge_TmSig_Handler,
+		},
+		{
+			MethodName: "InclusionProof",
+			Handler:    _Bridge_InclusionProof_Handler,
+		},
+		{
+			MethodName: "BlockValidatorInfo",
+			Handler:    _Bridge_BlockValidatorInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -794,6 +1082,158 @@ func (m *QueryMultistoreResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryInclusionProofRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryInclusionProofRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryInclusionProofRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Timestamp != 0 {
+		i = encodeVarintServices(dAtA, i, uint64(m.Timestamp))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.Qid) > 0 {
+		i -= len(m.Qid)
+		copy(dAtA[i:], m.Qid)
+		i = encodeVarintServices(dAtA, i, uint64(len(m.Qid)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if m.Height != 0 {
+		i = encodeVarintServices(dAtA, i, uint64(m.Height))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryInclusionProofResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryInclusionProofResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryInclusionProofResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.MerklePath) > 0 {
+		for iNdEx := len(m.MerklePath) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.MerklePath[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintServices(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x12
+		}
+	}
+	{
+		size, err := m.InclusionProofStuff.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintServices(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryBlockValidatorInfoRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryBlockValidatorInfoRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryBlockValidatorInfoRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Height != 0 {
+		i = encodeVarintServices(dAtA, i, uint64(m.Height))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryBlockValidatorInfoResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryBlockValidatorInfoResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryBlockValidatorInfoResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Validators) > 0 {
+		for iNdEx := len(m.Validators) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Validators[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintServices(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
 func (m *QueryTmRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -943,6 +1383,69 @@ func (m *QueryMultistoreResponse) Size() (n int) {
 	n += 1 + l + sovServices(uint64(l))
 	if len(m.Iavl) > 0 {
 		for _, e := range m.Iavl {
+			l = e.Size()
+			n += 1 + l + sovServices(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *QueryInclusionProofRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Height != 0 {
+		n += 1 + sovServices(uint64(m.Height))
+	}
+	l = len(m.Qid)
+	if l > 0 {
+		n += 1 + l + sovServices(uint64(l))
+	}
+	if m.Timestamp != 0 {
+		n += 1 + sovServices(uint64(m.Timestamp))
+	}
+	return n
+}
+
+func (m *QueryInclusionProofResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.InclusionProofStuff.Size()
+	n += 1 + l + sovServices(uint64(l))
+	if len(m.MerklePath) > 0 {
+		for _, e := range m.MerklePath {
+			l = e.Size()
+			n += 1 + l + sovServices(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *QueryBlockValidatorInfoRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Height != 0 {
+		n += 1 + sovServices(uint64(m.Height))
+	}
+	return n
+}
+
+func (m *QueryBlockValidatorInfoResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Validators) > 0 {
+		for _, e := range m.Validators {
 			l = e.Size()
 			n += 1 + l + sovServices(uint64(l))
 		}
@@ -1433,6 +1936,396 @@ func (m *QueryMultistoreResponse) Unmarshal(dAtA []byte) error {
 			}
 			m.Iavl = append(m.Iavl, IAVLMerklePathEvm{})
 			if err := m.Iavl[len(m.Iavl)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipServices(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthServices
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryInclusionProofRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowServices
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryInclusionProofRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryInclusionProofRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Height", wireType)
+			}
+			m.Height = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowServices
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Height |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Qid", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowServices
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthServices
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthServices
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Qid = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Timestamp", wireType)
+			}
+			m.Timestamp = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowServices
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Timestamp |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipServices(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthServices
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryInclusionProofResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowServices
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryInclusionProofResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryInclusionProofResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field InclusionProofStuff", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowServices
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthServices
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthServices
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.InclusionProofStuff.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MerklePath", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowServices
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthServices
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthServices
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.MerklePath = append(m.MerklePath, IAVLMerklePathEvm{})
+			if err := m.MerklePath[len(m.MerklePath)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipServices(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthServices
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryBlockValidatorInfoRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowServices
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryBlockValidatorInfoRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryBlockValidatorInfoRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Height", wireType)
+			}
+			m.Height = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowServices
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Height |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipServices(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthServices
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryBlockValidatorInfoResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowServices
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryBlockValidatorInfoResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryBlockValidatorInfoResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Validators", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowServices
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthServices
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthServices
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Validators = append(m.Validators, ValidatorInfo{})
+			if err := m.Validators[len(m.Validators)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

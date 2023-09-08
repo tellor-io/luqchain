@@ -175,6 +175,7 @@ func GetSignaturesAndPrefix(info *cometbft.SignedHeader) ([]TmSig, CommonEncoded
 		msg = append([]byte{uint8(len(msg))}, msg...)
 
 		addr, v, err := recoverETHAddress(msg, vote.Signature, vote.ValidatorAddress)
+
 		if err != nil {
 			return nil, CommonEncodedVotePart{}, err
 		}

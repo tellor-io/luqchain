@@ -2,11 +2,17 @@ package bridge
 
 import (
 	"context"
+	"fmt"
 
+	"luqchain/x/luqchain/types"
+
+	"github.com/cometbft/cometbft/libs/log"
 	coretypes "github.com/cometbft/cometbft/rpc/core/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	gogogrpc "github.com/gogo/protobuf/grpc"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // to check queryServer implements ServiceServer
@@ -46,6 +52,10 @@ func (s bridgeServer) getCommit(height int64) (*coretypes.ResultCommit, error) {
 	}
 	commit, err := node.Commit(context.Background(), h)
 	return commit, err
+}
+
+func (s bridgeServer) Logger(ctx sdk.Context) log.Logger {
+	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
 // package bridge

@@ -8,6 +8,8 @@ import "google/api/annotations.proto";
 import "luqchain/bridge/block_header_merkle.proto";
 import "luqchain/bridge/multistore.proto";
 import "luqchain/bridge/tmsig.proto";
+import "luqchain/bridge/inclusionproof.proto";
+import "luqchain/bridge/blockvalidatorinfo.proto";
 option go_package = "luqchain/bridge";
 
 service Bridge {
@@ -23,6 +25,14 @@ service Bridge {
     }
     rpc TmSig (QueryTmRequest) returns (QueryTmResponse) {
         option (google.api.http).get = "/luqchain/bridge/tmsig";
+    }
+    
+    rpc InclusionProof (QueryInclusionProofRequest) returns (QueryInclusionProofResponse) {
+        option (google.api.http).get = "/luqchain/bridge/inclusionproof";
+    }
+
+    rpc BlockValidatorInfo (QueryBlockValidatorInfoRequest) returns (QueryBlockValidatorInfoResponse) {
+        option (google.api.http).get = "/luqchain/bridge/blockvalidators";
     }
 
 }
@@ -46,6 +56,24 @@ message QueryMultistoreRequest {
 message QueryMultistoreResponse {
     MutiStoreTreeFields MutiStoreTree = 1 [(gogoproto.nullable) = false];
     repeated IAVLMerklePathEvm iavl = 2 [(gogoproto.nullable) = false];
+}
+
+message QueryInclusionProofRequest {
+    int64 height = 1;
+    string qid = 2;
+    uint64 timestamp = 3;
+}
+message QueryInclusionProofResponse {
+    InclusionProofStuffFields InclusionProofStuff = 1 [(gogoproto.nullable) = false];
+    repeated IAVLMerklePathEvm MerklePath = 2 [(gogoproto.nullable) = false];
+}
+
+message QueryBlockValidatorInfoRequest {
+    int64 height = 1;
+}
+
+message QueryBlockValidatorInfoResponse {
+    repeated ValidatorInfo Validators = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryTmRequest {

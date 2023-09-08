@@ -1,0 +1,11 @@
+syntax = "proto3";
+package luqchain.bridge;
+
+option go_package = "luqchain/bridge";
+
+message InclusionProofStuffFields {
+    string RootHash = 1;
+    int64 Version = 2;
+    string Key = 3;
+    string DataHash = 4;
+}
