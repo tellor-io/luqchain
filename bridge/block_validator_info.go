@@ -26,15 +26,36 @@ func (s bridgeServer) BlockValidatorInfo(aContext context.Context, req *QueryBlo
 		return nil, err
 	}
 
-	cosmosAddrs, ethAddrs, err := getEthAddresses(&commit.SignedHeader)
+	// cosmosAddrs, ethAddrs, err := getAddresses(&commit.SignedHeader)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// make empty cosmosAddrs and ethAddrs
+	cosmosAddrs := []string{}
+	// ethAddrs := []string{}
+	// _ = commit
+	// call GetSignaturesAndPrefix2
+	ethAddrs, err := GetSignaturesAndPrefix2(&commit.SignedHeader)
 	if err != nil {
 		return nil, err
 	}
+	// log eth addresses
+	logCtx := sdk.UnwrapSDKContext(aContext)
+	// format eth addresses to human readable (array of strings)
+	ethAddrsStr := []string{}
+	for _, ethAddr := range ethAddrs {
+		ethAddrsStr = append(ethAddrsStr, hex.EncodeToString([]byte(ethAddr)))
+	}
+	s.Logger(logCtx).Error(fmt.Sprintf("ethAddrs %v", ethAddrsStr))
+	// s.Logger(logCtx).Error(fmt.Sprintf("ethAddrs %v", ethAddrs))
 
 	votingPowers, err := getValidatorVotingPowers(aContext, &s, req.Height)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("votingPowers", votingPowers)
+	// log voting powers
+	s.Logger(logCtx).Error(fmt.Sprintf("votingPowers %v", votingPowers))
 
 	validators := make([]ValidatorInfo, len(cosmosAddrs))
 	for i, cosmosAddr := range cosmosAddrs {
@@ -48,6 +69,69 @@ func (s bridgeServer) BlockValidatorInfo(aContext context.Context, req *QueryBlo
 	return &QueryBlockValidatorInfoResponse{
 		Validators: validators,
 	}, nil
+}
+
+func GetSignaturesAndPrefix2(info *cometbft.SignedHeader) ([]string, error) {
+	addrs := []string{}
+	mapAddrs := map[string]TmSig{}
+
+	prefix, err := GetPrefix(tmproto.SignedMsgType(info.Commit.Type()), info.Commit.Height, int64(info.Commit.Round))
+	if err != nil {
+		return nil, err
+	}
+
+	prefix = append(prefix, []byte{34, 72, 10, 32}...)
+
+	suffix, err := protoio.MarshalDelimited(
+		&tmproto.CanonicalPartSetHeader{
+			Total: info.Commit.BlockID.PartSetHeader.Total,
+			Hash:  info.Commit.BlockID.PartSetHeader.Hash,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	suffix = append([]byte{18}, suffix...)
+
+	commonVote := CommonEncodedVotePart{SignedDataPrefix: prefix, SignedDataSuffix: suffix}
+
+	commonPart := append(commonVote.SignedDataPrefix, info.Commit.BlockID.Hash...)
+	commonPart = append(commonPart, commonVote.SignedDataSuffix...)
+
+	chainIDBytes := []byte(info.ChainID)
+	encodedChainIDConstant := append([]byte{50, uint8(len(chainIDBytes))}, chainIDBytes...)
+
+	for _, vote := range info.Commit.Signatures {
+		if !vote.ForBlock() {
+			continue
+		}
+
+		encodedTimestamp := encodeTime(vote.Timestamp)
+
+		msg := append(commonPart, []byte{42, uint8(len(encodedTimestamp))}...)
+		msg = append(msg, encodedTimestamp...)
+		msg = append(msg, encodedChainIDConstant...)
+		msg = append([]byte{uint8(len(msg))}, msg...)
+
+		addr, v, err := recoverETHAddress(msg, vote.Signature, vote.ValidatorAddress)
+
+		if err != nil {
+			return nil, err
+		}
+		addrs = append(addrs, string(addr))
+		mapAddrs[string(addr)] = TmSig{
+			common.BytesToHash(vote.Signature[:32]).Hex(),
+			common.BytesToHash(vote.Signature[32:]).Hex(),
+			uint32(v),
+			common.BytesToHash(encodedTimestamp).Hex(),
+		}
+	}
+	if len(addrs) == 0 {
+		return nil, fmt.Errorf("No valid precommit")
+	}
+
+	return addrs, nil
 }
 
 func getAddressesSignaturesAndPrefix(info *cometbft.SignedHeader) ([]string, []TmSig, CommonEncodedVotePart, error) {
@@ -132,7 +216,7 @@ func getAddressesSignaturesAndPrefix(info *cometbft.SignedHeader) ([]string, []T
 	return cosmosAddresses, signatures, commonVote, nil
 }
 
-func getEthAddresses(info *cometbft.SignedHeader) ([]string, []string, error) {
+func getAddresses(info *cometbft.SignedHeader) ([]string, []string, error) {
 	// Get signatures and common encoded vote parts from the signed header
 	cosmosAddresses, signatures, commonEncodedPart, err := getAddressesSignaturesAndPrefix(info)
 	if err != nil {
