@@ -111,17 +111,14 @@ func getAddresses(info *cometbft.SignedHeader) ([]string, []string, error) {
 func getValidatorVotingPowers(goContext context.Context, b *bridgeServer, height int64) (map[string]int64, error) {
 	ctx := sdk.UnwrapSDKContext(goContext)
 
-	// Call the Validators method on the TendermintRPC client
 	result, err := b.clientCtx.Client.Validators(ctx, &height, nil, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	// Create a map to store voting powers with the validator address as the key
 	votingPowers := make(map[string]int64)
-
 	for _, validator := range result.Validators {
-		votingPowers[string(validator.Address)] = validator.VotingPower
+		votingPowers[validator.Address.String()] = validator.VotingPower
 	}
 
 	return votingPowers, nil
