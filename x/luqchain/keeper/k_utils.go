@@ -7,7 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-func hashQdata(queryData string) ([]byte, error) {
+func HashQdata(queryData string) ([]byte, error) {
 	// Decode the hex-encoded input string
 	qbytes, err := hex.DecodeString(queryData)
 	if err != nil {

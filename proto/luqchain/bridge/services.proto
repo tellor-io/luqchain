@@ -8,21 +8,23 @@ import "google/api/annotations.proto";
 import "luqchain/bridge/block_header_merkle.proto";
 import "luqchain/bridge/multistore.proto";
 import "luqchain/bridge/tmsig.proto";
-option go_package = "luqchain/bridge";
+import "luqchain/bridge/evm_client.proto";
+option go_package = "luqchain/bridge/types";
+
 
 service Bridge {
   
     rpc BlockheaderMerkle (QueryBlockheaderMerkleRequest) returns (QueryBlockheaderMerkleResponse) {
         option (google.api.http).get = "/luqchain/bridge/blockheadermerkle";
     }
-    rpc BlockheaderMerkleEVM (QueryBlockheaderMerkleRequest) returns (QueryBlockheaderMerkleEVMResponse) {
-        option (google.api.http).get = "/luqchain/bridge/blockheadermerkleevm";
-    }
     rpc MultistoreTree (QueryMultistoreRequest) returns (QueryMultistoreResponse) {
         option (google.api.http).get = "/luqchain/bridge/multistore";
     }
     rpc TmSig (QueryTmRequest) returns (QueryTmResponse) {
         option (google.api.http).get = "/luqchain/bridge/tmsig";
+    }
+    rpc Proof (QueryMultistoreRequest) returns (QueryProofResponse) {
+        option (google.api.http).get = "/luqchain/bridge/proof";
     }
 
 }
@@ -35,17 +37,18 @@ message QueryBlockheaderMerkleRequest {
 message QueryBlockheaderMerkleResponse {
     BlockHeaderMerkle blockheaderMerkle = 1 [(gogoproto.nullable) = false];
 }
-message QueryBlockheaderMerkleEVMResponse {
-    BlockHeaderMerkleEvm blockheaderMerkleEvm = 1 [(gogoproto.nullable) = false];
-}
+
 message QueryMultistoreRequest {
     int64 height = 1;
     string qid = 2;
     uint64 timestamp = 3;
 }
+
 message QueryMultistoreResponse {
-    MutiStoreTreeFields MutiStoreTree = 1 [(gogoproto.nullable) = false];
-    repeated IAVLMerklePathEvm iavl = 2 [(gogoproto.nullable) = false];
+    MultiStoreTreeFields MultiStoreTree = 1 [(gogoproto.nullable) = false];
+    repeated IAVLMerklePath iavl = 2 [(gogoproto.nullable) = false];
+    uint64 version = 3;
+    Report report = 4 [(gogoproto.nullable) = false];
 }
 
 message QueryTmRequest {
@@ -54,4 +57,10 @@ message QueryTmRequest {
 message QueryTmResponse {
     repeated TmSig tmSig = 1 [(gogoproto.nullable) = false];
     CommonEncodedVotePart common = 2 [(gogoproto.nullable) = false];
+}
+
+message QueryProofResponse {
+	int64 height = 1;
+	Proof result = 2;
+    string evmProofBytes = 3;
 }
