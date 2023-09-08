@@ -39,7 +39,7 @@ library ReportCodec {
         if (uint64(instance.timestamp) != 0) {
             finalEncoded = abi.encodePacked(
                 finalEncoded,
-                ProtobufLib.encode_key(2, uint64(ProtobufLib.WireType.Varint)),
+                ProtobufLib.encode_key(3, uint64(ProtobufLib.WireType.Varint)),
                 ProtobufLib.encode_uint64(instance.timestamp)
             );
         }
