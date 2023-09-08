@@ -150,14 +150,10 @@ contract BridgeTest is Test {
 
     function testInclusionProof() public {
         Bridge.ValidatorWithPower[]
-            memory vps = new Bridge.ValidatorWithPower[](2);
+            memory vps = new Bridge.ValidatorWithPower[](1);
         vps[0] = Bridge.ValidatorWithPower(
-            0x008c1B0e9CdD79Cf896a6e54cC60353BC104A313,
+            0xC23E26697ef646b74EEbC33A82a24336E4321607,
             uint256(1000000)
-        );
-        vps[1] = Bridge.ValidatorWithPower(
-            0x2461D0b9B9808F56Af2E71B4aEcC90C60Ed9AB90,
-            uint256(500000)
         );
 
         Bridge bridge2 = new Bridge(
@@ -165,40 +161,26 @@ contract BridgeTest is Test {
             hex"32086C7571636861696E" // encoded chain ID
         );
         assertEq(bridge2.encodedChainID(), hex"32086C7571636861696E");
-        assertEq(bridge2.getNumberOfValidators(), 2);
+        assertEq(bridge2.getNumberOfValidators(), 1);
         assertEq(
             bridge2.getValidatorPower(
-                0x008c1B0e9CdD79Cf896a6e54cC60353BC104A313
+                0xC23E26697ef646b74EEbC33A82a24336E4321607
             ),
             1000000
         );
         assertEq(bridge2.getAllValidatorPowers()[0].power, vps[0].power);
 
-        bytes32 rootHash = 0x75605B4972D8E1E729ED6404AE382E9A04AF62419C07F6B8684F97EF93C56B90;
-        uint256 version = 4629;
-        bytes memory key = hex"F03E9A3A8125B3030D3DA809A5065FB5F4FB91AE04B45C455218F4844614FC48";
-        bytes32 dataHash = 0x2A2F7B2BF7A9028DE05502F0A169A72E64A6F3CD3C26F62D8C2A93618928C4A1;
-        Bridge.IAVLData[] memory merklePaths = new Bridge.IAVLData[](3);
+        bytes32 rootHash = 0x7BC9FE5479D0A75C0B29D4DA8E394613825D268C5BEC6B78E5EF72D1EF67037C;
+        uint256 version = 12076;
+        bytes memory key = hex"5265706F72742D76616C75652DEC97E60FC36195D5B5A54334542CE8FECDA070B0E15F403A02A5C93E7B707FF00000000064FB368A";
+        bytes32 dataHash = 0x181CD951F0982873CD8723F679EA6952AD7730E648E812E83885973A881488F9;
+        Bridge.IAVLData[] memory merklePaths = new Bridge.IAVLData[](1);
         merklePaths[0] = Bridge.IAVLData({
             isDataOnRight: true,
             subtreeHeight: 1,
             subtreeSize: 2,
-            subtreeVersion: 4629,
-            siblingHash: 0x289F5F11077B09013D392305B9DF9EF17C64BA4DED15F3F445A38E18F84F3F82
-        });
-        merklePaths[1] = Bridge.IAVLData({
-            isDataOnRight: true,
-            subtreeHeight: 2,
-            subtreeSize: 4,
-            subtreeVersion: 4629,
-            siblingHash: 0xF6F2BBAC53F49488FC9C3CD8D94707F7906201C1DC7F95D15F0D88F3DF48CB13
-        });
-        merklePaths[2] = Bridge.IAVLData({
-            isDataOnRight: true,
-            subtreeHeight: 3,
-            subtreeSize: 6,
-            subtreeVersion: 4629,
-            siblingHash: 0xE3C98274F4F977F312E2CFEB50186142B0ADBA198FFDD2D9EFC2B06A06103B14
+            subtreeVersion: 12076,
+            siblingHash: 0x54B64F446B262D87949E552D0CF71358DA17CAFBEA1F956DA10805424B0447F4
         });
         assertEq(bridge2.verifyProof(rootHash, version, key, dataHash, merklePaths), true);
     }
