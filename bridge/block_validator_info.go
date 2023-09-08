@@ -2,13 +2,8 @@ package bridge
 
 import (
 	"context"
-	"crypto/ecdsa"
-	"crypto/elliptic"
-	"crypto/sha256"
 	"encoding/hex"
-	"errors"
 	fmt "fmt"
-	"sort"
 	"strings"
 
 	"github.com/cometbft/cometbft/libs/protoio"
@@ -17,7 +12,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
-	"golang.org/x/crypto/sha3"
 )
 
 func (s bridgeServer) BlockValidatorInfo(aContext context.Context, req *QueryBlockValidatorInfoRequest) (*QueryBlockValidatorInfoResponse, error) {
@@ -26,35 +20,19 @@ func (s bridgeServer) BlockValidatorInfo(aContext context.Context, req *QueryBlo
 		return nil, err
 	}
 
-	// cosmosAddrs, ethAddrs, err := getAddresses(&commit.SignedHeader)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// make empty cosmosAddrs and ethAddrs
-	cosmosAddrs := []string{}
-	// ethAddrs := []string{}
-	// _ = commit
-	// call GetSignaturesAndPrefix2
-	ethAddrs, err := GetSignaturesAndPrefix2(&commit.SignedHeader)
+	ethAddrs, cosmosAddrs, err := getAddresses(&commit.SignedHeader)
 	if err != nil {
 		return nil, err
 	}
-	// log eth addresses
+
 	logCtx := sdk.UnwrapSDKContext(aContext)
-	// format eth addresses to human readable (array of strings)
-	ethAddrsStr := []string{}
-	for _, ethAddr := range ethAddrs {
-		ethAddrsStr = append(ethAddrsStr, hex.EncodeToString([]byte(ethAddr)))
-	}
-	s.Logger(logCtx).Error(fmt.Sprintf("ethAddrs %v", ethAddrsStr))
-	// s.Logger(logCtx).Error(fmt.Sprintf("ethAddrs %v", ethAddrs))
+	s.Logger(logCtx).Error(fmt.Sprintf("ethAddrs %v", ethAddrs))
+	s.Logger(logCtx).Error(fmt.Sprintf("cosmosAddrs %v", cosmosAddrs))
 
 	votingPowers, err := getValidatorVotingPowers(aContext, &s, req.Height)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("votingPowers", votingPowers)
-	// log voting powers
 	s.Logger(logCtx).Error(fmt.Sprintf("votingPowers %v", votingPowers))
 
 	validators := make([]ValidatorInfo, len(cosmosAddrs))
@@ -71,217 +49,63 @@ func (s bridgeServer) BlockValidatorInfo(aContext context.Context, req *QueryBlo
 	}, nil
 }
 
-func GetSignaturesAndPrefix2(info *cometbft.SignedHeader) ([]string, error) {
-	addrs := []string{}
-	mapAddrs := map[string]TmSig{}
-
-	prefix, err := GetPrefix(tmproto.SignedMsgType(info.Commit.Type()), info.Commit.Height, int64(info.Commit.Round))
-	if err != nil {
-		return nil, err
-	}
-
-	prefix = append(prefix, []byte{34, 72, 10, 32}...)
-
-	suffix, err := protoio.MarshalDelimited(
-		&tmproto.CanonicalPartSetHeader{
-			Total: info.Commit.BlockID.PartSetHeader.Total,
-			Hash:  info.Commit.BlockID.PartSetHeader.Hash,
-		},
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	suffix = append([]byte{18}, suffix...)
-
-	commonVote := CommonEncodedVotePart{SignedDataPrefix: prefix, SignedDataSuffix: suffix}
-
-	commonPart := append(commonVote.SignedDataPrefix, info.Commit.BlockID.Hash...)
-	commonPart = append(commonPart, commonVote.SignedDataSuffix...)
-
-	chainIDBytes := []byte(info.ChainID)
-	encodedChainIDConstant := append([]byte{50, uint8(len(chainIDBytes))}, chainIDBytes...)
-
-	for _, vote := range info.Commit.Signatures {
-		if !vote.ForBlock() {
-			continue
-		}
-
-		encodedTimestamp := encodeTime(vote.Timestamp)
-
-		msg := append(commonPart, []byte{42, uint8(len(encodedTimestamp))}...)
-		msg = append(msg, encodedTimestamp...)
-		msg = append(msg, encodedChainIDConstant...)
-		msg = append([]byte{uint8(len(msg))}, msg...)
-
-		addr, v, err := recoverETHAddress(msg, vote.Signature, vote.ValidatorAddress)
-
-		if err != nil {
-			return nil, err
-		}
-		addrs = append(addrs, string(addr))
-		mapAddrs[string(addr)] = TmSig{
-			common.BytesToHash(vote.Signature[:32]).Hex(),
-			common.BytesToHash(vote.Signature[32:]).Hex(),
-			uint32(v),
-			common.BytesToHash(encodedTimestamp).Hex(),
-		}
-	}
-	if len(addrs) == 0 {
-		return nil, fmt.Errorf("No valid precommit")
-	}
-
-	return addrs, nil
-}
-
-func getAddressesSignaturesAndPrefix(info *cometbft.SignedHeader) ([]string, []TmSig, CommonEncodedVotePart, error) {
-	addrs := []string{}
-	mapAddrs := map[string]struct {
-		sig     TmSig
-		valAddr string
-	}{}
-
-	prefix, err := GetPrefix(tmproto.SignedMsgType(info.Commit.Type()), info.Commit.Height, int64(info.Commit.Round))
-	if err != nil {
-		return nil, nil, CommonEncodedVotePart{}, err
-	}
-
-	prefix = append(prefix, []byte{34, 72, 10, 32}...)
-
-	suffix, err := protoio.MarshalDelimited(
-		&tmproto.CanonicalPartSetHeader{
-			Total: info.Commit.BlockID.PartSetHeader.Total,
-			Hash:  info.Commit.BlockID.PartSetHeader.Hash,
-		},
-	)
-	if err != nil {
-		return nil, nil, CommonEncodedVotePart{}, err
-	}
-
-	suffix = append([]byte{18}, suffix...)
-
-	commonVote := CommonEncodedVotePart{SignedDataPrefix: prefix, SignedDataSuffix: suffix}
-
-	commonPart := append(commonVote.SignedDataPrefix, info.Commit.BlockID.Hash...)
-	commonPart = append(commonPart, commonVote.SignedDataSuffix...)
-
-	chainIDBytes := []byte(info.ChainID)
-	encodedChainIDConstant := append([]byte{50, uint8(len(chainIDBytes))}, chainIDBytes...)
-
-	for _, vote := range info.Commit.Signatures {
-		if !vote.ForBlock() {
-			continue
-		}
-
-		encodedTimestamp := encodeTime(vote.Timestamp)
-
-		msg := append(commonPart, []byte{42, uint8(len(encodedTimestamp))}...)
-		msg = append(msg, encodedTimestamp...)
-		msg = append(msg, encodedChainIDConstant...)
-		msg = append([]byte{uint8(len(msg))}, msg...)
-
-		addr, v, err := recoverETHAddress(msg, vote.Signature, vote.ValidatorAddress)
-
-		if err != nil {
-			return nil, nil, CommonEncodedVotePart{}, err
-		}
-
-		addrs = append(addrs, string(addr))
-		mapAddrs[string(addr)] = struct {
-			sig     TmSig
-			valAddr string
-		}{
-			sig: TmSig{
-				common.BytesToHash(vote.Signature[:32]).Hex(),
-				common.BytesToHash(vote.Signature[32:]).Hex(),
-				uint32(v),
-				common.BytesToHash(encodedTimestamp).Hex(),
-			},
-			valAddr: string(vote.ValidatorAddress), // Storing validator address in the map
-		}
-	}
-
-	if len(addrs) == 0 {
-		return nil, nil, CommonEncodedVotePart{}, fmt.Errorf("no valid precommit")
-	}
-
-	signatures := make([]TmSig, len(addrs))
-	cosmosAddresses := make([]string, len(addrs)) // Allocate with exact size for efficiency
-	sort.Strings(addrs)
-	for i, addr := range addrs {
-		signatures[i] = mapAddrs[addr].sig
-		cosmosAddresses[i] = mapAddrs[addr].valAddr // Extract validator addresses in the same order
-	}
-
-	return cosmosAddresses, signatures, commonVote, nil
-}
-
 func getAddresses(info *cometbft.SignedHeader) ([]string, []string, error) {
-	// Get signatures and common encoded vote parts from the signed header
-	cosmosAddresses, signatures, commonEncodedPart, err := getAddressesSignaturesAndPrefix(info)
+	ethAddresses := []string{}
+	cosmosAddresses := []string{}
+
+	prefix, err := GetPrefix(tmproto.SignedMsgType(info.Commit.Type()), info.Commit.Height, int64(info.Commit.Round))
 	if err != nil {
 		return nil, nil, err
 	}
 
+	prefix = append(prefix, []byte{34, 72, 10, 32}...)
+
+	suffix, err := protoio.MarshalDelimited(
+		&tmproto.CanonicalPartSetHeader{
+			Total: info.Commit.BlockID.PartSetHeader.Total,
+			Hash:  info.Commit.BlockID.PartSetHeader.Hash,
+		},
+	)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	suffix = append([]byte{18}, suffix...)
+
+	commonVote := CommonEncodedVotePart{SignedDataPrefix: prefix, SignedDataSuffix: suffix}
+
+	commonPart := append(commonVote.SignedDataPrefix, info.Commit.BlockID.Hash...)
+	commonPart = append(commonPart, commonVote.SignedDataSuffix...)
+
 	chainIDBytes := []byte(info.ChainID)
 	encodedChainIDConstant := append([]byte{50, uint8(len(chainIDBytes))}, chainIDBytes...)
 
-	var addresses []string
-	for _, sig := range signatures {
-		address, err := CheckTimeAndRecoverSigner(sig, commonEncodedPart, encodedChainIDConstant)
+	for _, vote := range info.Commit.Signatures {
+		if !vote.ForBlock() {
+			continue
+		}
+
+		encodedTimestamp := encodeTime(vote.Timestamp)
+
+		msg := append(commonPart, []byte{42, uint8(len(encodedTimestamp))}...)
+		msg = append(msg, encodedTimestamp...)
+		msg = append(msg, encodedChainIDConstant...)
+		msg = append([]byte{uint8(len(msg))}, msg...)
+
+		addr, _, err := recoverETHAddress(msg, vote.Signature, vote.ValidatorAddress)
+
 		if err != nil {
 			return nil, nil, err
 		}
-		addresses = append(addresses, address)
+		formattedEthAddr := toChecksumAddress(hex.EncodeToString([]byte(addr)))
+		ethAddresses = append(ethAddresses, formattedEthAddr)
+		cosmosAddresses = append(cosmosAddresses, vote.ValidatorAddress.String())
+	}
+	if len(ethAddresses) == 0 {
+		return nil, nil, fmt.Errorf("no valid precommit")
 	}
 
-	return cosmosAddresses, addresses, nil
-}
-
-func CheckTimeAndRecoverSigner(sig TmSig, commonEncodedPart CommonEncodedVotePart, encodedChainID []byte) (string, error) {
-	// Ensure valid timestamp size
-	encodedTimestampLen := len(sig.EncodedTimestamp)
-	if encodedTimestampLen < 6 || encodedTimestampLen > 12 {
-		return "", errors.New("invalid timestamp's size")
-	}
-
-	// Construct the encoded canonical vote
-	encodedCanonicalVote := append(commonEncodedPart.SignedDataPrefix, 42)
-	encodedCanonicalVote = append(encodedCanonicalVote, byte(encodedTimestampLen))
-	encodedCanonicalVote = append(encodedCanonicalVote, sig.EncodedTimestamp...)
-	encodedCanonicalVote = append(encodedCanonicalVote, commonEncodedPart.SignedDataSuffix...)
-	encodedCanonicalVote = append(encodedCanonicalVote, encodedChainID...)
-
-	// Construct the data to hash
-	dataToHash := append([]byte{byte(len(encodedCanonicalVote))}, encodedCanonicalVote...)
-	hashedData := sha256.Sum256(dataToHash)
-
-	// Perform ecrecover
-	publicKeyECDSA, err := ecrecover(hashedData[:], sig.V, sig.R, sig.S)
-	if err != nil {
-		return "", err
-	}
-
-	address := publicKeyBytesToAddress(publicKeyECDSA)
-	return strings.ToLower(address), nil
-}
-
-func ecrecover(hash []byte, v uint32, rStr, sStr string) (*ecdsa.PublicKey, error) {
-	signature := make([]byte, 65)
-	copy(signature[32-len(rStr):32], rStr)
-	copy(signature[64-len(sStr):64], sStr)
-	signature[64] = byte(v - 27)
-	return crypto.SigToPub(hash, signature)
-}
-
-func publicKeyBytesToAddress(pub *ecdsa.PublicKey) string {
-	pubBytes := elliptic.Marshal(pub.Curve, pub.X, pub.Y)
-	hash := sha3.NewLegacyKeccak256()
-	_, err := hash.Write(pubBytes[1:]) // omit the prefix byte 0x04 of uncompressed public key
-	if err != nil {
-		panic(err)
-	}
-	return "0x" + hex.EncodeToString(hash.Sum(nil)[12:])
+	return ethAddresses, cosmosAddresses, nil
 }
 
 func getValidatorVotingPowers(goContext context.Context, b *bridgeServer, height int64) (map[string]int64, error) {
@@ -301,4 +125,18 @@ func getValidatorVotingPowers(goContext context.Context, b *bridgeServer, height
 	}
 
 	return votingPowers, nil
+}
+
+func toChecksumAddress(address string) string {
+	address = strings.TrimPrefix(address, "0x")
+	addressHash := common.Bytes2Hex(crypto.Keccak256([]byte(strings.ToLower(address))))
+	checksumAddress := "0x"
+	for i, c := range address {
+		if '0' <= addressHash[i] && addressHash[i] <= '7' {
+			checksumAddress += strings.ToLower(string(c))
+		} else {
+			checksumAddress += strings.ToUpper(string(c))
+		}
+	}
+	return checksumAddress
 }
