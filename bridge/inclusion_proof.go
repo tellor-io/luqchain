@@ -2,6 +2,7 @@ package bridge
 
 import (
 	"context"
+	"crypto/sha256"
 	fmt "fmt"
 	"luqchain/x/luqchain/keeper"
 	"luqchain/x/luqchain/types"
@@ -93,13 +94,18 @@ func (s bridgeServer) InclusionProof(ctx context.Context, req *QueryInclusionPro
 		evmdata[i].SubtreeVersion = int64(p.SubtreeVersion)
 		evmdata[i].SiblingHash = bytes.HexBytes(p.SiblingHash).String()
 	}
+	// dataHash := bytes.HexBytes(iavlProof.Value).String()
+	// the above is incorrect, it should be the hash of the value. fix:
+	hash := sha256.Sum256(iavlProof.Value)
+	hexBytes := bytes.HexBytes(hash[:])
+	dataHash := hexBytes.String()
 
 	return &QueryInclusionProofResponse{
 		InclusionProofStuff: InclusionProofStuffFields{
 			RootHash: bytes.HexBytes(multistoreProof.Value).String(),
 			Version:  int64(req.Height),
 			Key:      bytes.HexBytes(iavlProof.Key).String(),
-			DataHash: bytes.HexBytes(iavlProof.Value).String(),
+			DataHash: dataHash,
 		},
 		MerklePath: evmdata,
 	}, nil
