@@ -33,13 +33,15 @@ func PrepareProposalHandler(
 	txVerifier baseapp.ProposalTxVerifier,
 ) sdk.PrepareProposalHandler {
 	return func(ctx sdk.Context, req abci.RequestPrepareProposal) abci.ResponsePrepareProposal {
-		fmt.Println("Start PrepareProposalHandler!!!!!!!!!!!!!!!!!!!!")
+		fmt.Println("Start PrepareProposalHandler!")
 		decoder := txConfig.TxDecoder()
-		submitValuetxs := [][]byte{}
+		// submitValuetxs := [][]byte{}
 		// list of transactions
 		// for each transaction, decode it and if msg name == MsgSubmitVal, then
 		// add to mapping of qdata -> list of values to be averaged
 		mapping := make(map[string][]uint64)
+		// print num txs in req
+		fmt.Println("num txs in req:", len(req.Txs))
 		for _, tx := range req.Txs {
 
 			txDec, err := decoder(tx)
@@ -51,15 +53,19 @@ func PrepareProposalHandler(
 			if err != nil {
 				panic(err)
 			}
-			if txDec.ValidateBasic() != nil {
-				ctx.Logger().Error(fmt.Sprintf("TxDecoder ValidateBasic error: %v", err))
+			validateErr := txDec.ValidateBasic()
+			if validateErr != nil {
+				fmt.Println("TxDecoder ValidateBasic error: ")
+				fmt.Println(validateErr)
+				ctx.Logger().Error(fmt.Sprintf("TxDecoder ValidateBasic error: %v", validateErr))
 				return EmptyResponse
 			}
+
 			msgs := txDec.GetMsgs()
 			for _, msg := range msgs {
 				funcName := proto.MessageName(msg)
 				if funcName == "luqchain.luqchain.MsgSubmitVal" {
-					submitValuetxs = append(submitValuetxs, tx)
+					// submitValuetxs = append(submitValuetxs, tx)
 					msgSubmitVal := msg.(*luqchaintypes.MsgSubmitVal)
 					fmt.Println("creator:", msgSubmitVal.Creator)
 					fmt.Println("qdata:", msgSubmitVal.Qdata)
@@ -76,10 +82,13 @@ func PrepareProposalHandler(
 		for _, values := range mapping {
 			median := values[len(values)/2]
 			addr := sdk.AccAddress(req.ProposerAddress)
-			fmt.Println(addr.String(), "address of proposer, Account")
+			fmt.Println("proposer address:", addr)
 			msgSubmitVal := luqchaintypes.NewMsgSubmitVal(addr.String(), "spot", median) //change key from qdata to avoid temp
 			if err := msgSubmitVal.ValidateBasic(); err != nil {
-				panic(err)
+				fmt.Println("MsgSubmitVal ValidateBasic error: ")
+				fmt.Println(err)
+				ctx.Logger().Error(fmt.Sprintf("MsgSubmitVal ValidateBasic error: %v", err))
+				return EmptyResponse
 			}
 			txBytes, err := EncodeMsgsIntoTxBytes(txConfig, msgSubmitVal)
 			if err != nil {
@@ -87,9 +96,16 @@ func PrepareProposalHandler(
 				return EmptyResponse
 			}
 			txDec, err := decoder(txBytes)
+			if err != nil {
+				ctx.Logger().Error(fmt.Sprintf("TxDecoder error: %v", err))
+				return EmptyResponse
+			}
 			// transaction will fail to verify if it is not signed
-			bz, err := txVerifier.PrepareProposalVerifyTx(txDec)
-			fmt.Println(bz, err)
+			_, err = txVerifier.PrepareProposalVerifyTx(txDec)
+			if err != nil {
+				ctx.Logger().Error(fmt.Sprintf("PrepareProposalVerifyTx error: %v", err))
+				return EmptyResponse
+			}
 			txsToReturn = append(txsToReturn, txBytes)
 		}
 		fmt.Println("End PrepareProposalHandler")
