@@ -203,4 +203,11 @@ func TestPrepareProposalHandler(t *testing.T) {
 
 	fmt.Println("medianized tx:")
 	printSubmitValTxs(resp.Txs, txConfig)
+
+	// check median value is 200
+	txDec, _ := txConfig.TxDecoder()(resp.Txs[0])
+	msgs := txDec.GetMsgs()
+	msgSubmitVal := msgs[0].(*types.MsgSubmitVal)
+	require.Equal(t, uint64(200), msgSubmitVal.Value)
+
 }
