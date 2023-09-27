@@ -731,6 +731,7 @@ func New(
 	app.SetInitChainer(app.InitChainer)
 	app.SetBeginBlocker(app.BeginBlocker)
 	app.SetEndBlocker(app.EndBlocker)
+	app.SetPrepareProposal(PrepareProposalHandler(txConfig, app, app.StakingKeeper))
 
 	if loadLatest {
 		if err := app.LoadLatestVersion(); err != nil {

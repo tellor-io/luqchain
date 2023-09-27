@@ -2,6 +2,7 @@ package bridge
 
 import (
 	"context"
+	. "luqchain/bridge/types"
 
 	"github.com/cometbft/cometbft/crypto/merkle"
 )

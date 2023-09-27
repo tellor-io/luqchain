@@ -23,7 +23,7 @@ ignite scaffold query retrieveVal qid timestamp:uint --response report:Report -d
 
 ```sh
 # scaffold retrieveAll query
-ignite scaffold query retrieveAll qid --response report:Report --paginated -d "Fetch all the reports for a given query id"
+ignite scaffold query retrieveAll --response report:Report --paginated -d "Fetch all the reports for a given query id"
 ```
 
 Things to consider editing in `config.yml` is the denom of the staking token.
@@ -45,4 +45,10 @@ Switch the pubkey type to secp256k1
 ignite scaffold type blockHeaderMerkle versionChainidHash height:uint timeSecond:uint timeNanosecond:uint lastblockidCommitHash nextvalidatorConsensusHash lastresultsHash evidenceProposerHash
 
 ignite scaffold type blockHeaderMerkleEvm versionChainidHash height:uint64 timeSecond:uint64 timeNanosecond:uint32 lastblockidCommitHash nextvalidatorConsensusHash lastresultsHash evidenceProposerHash
+```
+
+Example transaction
+
+```sh
+luqchaind tx luqchain submit-val 00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000953706F745072696365000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000C000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000366696C000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000037573640000000000000000000000000000000000000000000000000000000000 12350 --from alice -y
 ```

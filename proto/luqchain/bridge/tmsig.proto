@@ -1,12 +1,12 @@
 syntax = "proto3";
 package luqchain.bridge;
 
-option go_package = "luqchain/bridge";
+option go_package = "luqchain/bridge/types";
 message TmSig {
-	string R = 1;
-	string S = 2;
+	bytes R = 1;
+	bytes S = 2;
 	uint32 V = 3;
-	string EncodedTimestamp = 4;
+	bytes EncodedTimestamp = 4;
 }
 
 message CommonEncodedVotePart {
