@@ -25,11 +25,13 @@ import (
 
 	"errors"
 
+	cosmosmath "cosmossdk.io/math"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
 	sdktypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	xauthsigning "github.com/cosmos/cosmos-sdk/x/auth/signing"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
 type MyProposalTxVerifier struct {
@@ -173,9 +175,32 @@ func TestPrepareProposalHandler(t *testing.T) {
 	priv2, _, addr2 := testdata.KeyTestPubAddr()
 	priv3, _, addr3 := testdata.KeyTestPubAddr()
 
+	valAddr1 := sdktypes.ValAddress(addr1.Bytes())
+	valAddr2 := sdktypes.ValAddress(addr2.Bytes())
+	valAddr3 := sdktypes.ValAddress(addr3.Bytes())
+
+	val1, _ := stakingtypes.NewValidator(valAddr1, priv1.PubKey(), stakingtypes.Description{})
+	val2, _ := stakingtypes.NewValidator(valAddr2, priv2.PubKey(), stakingtypes.Description{})
+	val3, _ := stakingtypes.NewValidator(valAddr3, priv3.PubKey(), stakingtypes.Description{})
+
+	val1, _ = val1.AddTokensFromDel(cosmosmath.NewInt(100))
+	val2, _ = val2.AddTokensFromDel(cosmosmath.NewInt(200))
+	val3, _ = val3.AddTokensFromDel(cosmosmath.NewInt(300))
+
+	val1 = val1.UpdateStatus(stakingtypes.Bonded)
+	val2 = val2.UpdateStatus(stakingtypes.Bonded)
+	val3 = val3.UpdateStatus(stakingtypes.Bonded)
+
+	testApp.StakingKeeper.SetValidator(ctxA, val1)
+	testApp.StakingKeeper.SetValidator(ctxA, val2)
+	testApp.StakingKeeper.SetValidator(ctxA, val3)
+
 	msg1 := types.NewMsgSubmitVal(addr1.String(), "spot", 100)
 	msg2 := types.NewMsgSubmitVal(addr2.String(), "spot", 200)
 	msg3 := types.NewMsgSubmitVal(addr3.String(), "spot", 300)
+
+	// advance block height to avoid div by zero err in GetConsensusPower
+	ctxA = ctxA.WithBlockHeight(1)
 
 	encodingConfig := app.MakeEncodingConfig()
 	txs, err := CreateSignedTxs(
@@ -191,7 +216,7 @@ func TestPrepareProposalHandler(t *testing.T) {
 
 	// printSubmitValTxs(txs, txConfig)
 
-	handler := app.PrepareProposalHandler(txConfig, txVerifier)
+	handler := app.PrepareProposalHandler(txConfig, txVerifier, testApp.StakingKeeper)
 	req := abci.RequestPrepareProposal{
 		Txs:             txs,
 		ProposerAddress: addr1.Bytes(),
